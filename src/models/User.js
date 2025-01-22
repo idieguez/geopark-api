@@ -1,27 +1,27 @@
-class User {
+const mongoose = require('mongoose');
 
-    constructor(id, name, email, password) {
-        this.id = id;           // ID único del usuario
-        this.name = name;       // Nombre del usuario
-        this.email = email;     // Correo electrónico
-        this.password = password; // Contraseña (cifrada idealmente)
-    }
 
-    // Método para mostrar información básica del usuario
-    getProfile() {
-        return {
-            id: this.id,
-            name: this.name,
-            email: this.email,
-        };
-    }
 
-    // Método estático para validar el formato del email
-    static isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-}
+
+const userSchema = new mongoose.Schema({
+
+    name: { type: String, required: true },
+    surname: { type: String, required: true },
+    secondSurname: { type: String, default: '' },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }, // Encrypted password
+    newsletter: { type: Boolean, required: true, default: false },
+    settings: {
+        appearance: { type: String, enum: ['auto', 'light', 'dark'], required: true, default: 'auto' }
+    },
+    notes: { type: String, default: '' },
+    dateUserCreation: { type: Date, required: true, default: Date.now },
+    dateLastUserModification: { type: Date, required: true, default: Date.now },
+    dateLastPasswordModification: { type: Date, required: true, default: Date.now }
+
+}, { collection: 'User' });
+
+const User = mongoose.model('User', userSchema);
 
 
 

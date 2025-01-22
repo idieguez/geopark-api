@@ -1,12 +1,13 @@
 const express = require('express');
-const { getUser, getAllUsers } = require('../controllers/users-controller');
+const { createUser, getUserByEmail, updateUser } = require('../controllers/users-controller');
 const router = express.Router();
 
 
 
 
-router.get('/getUser', getUser);
-router.get('/getAllUsers', getAllUsers);
+router.post('', createUser);
+router.get('/:email', getUserByEmail);
+router.patch('/:email', updateUser);
 
 
 

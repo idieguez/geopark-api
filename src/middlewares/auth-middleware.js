@@ -3,7 +3,7 @@ const authenticate = (req, res, next) => {
     const token = req.headers['authorization'];
     
     if (!token) {
-      return res.status(401).json({ error: 'Acceso no autorizado. Token no proporcionado.' });
+      return res.status(401).json({ error: `Acceso no autorizado. Token no proporcionado.` });
     }
   
     // Aquí podrías verificar el token usando alguna librería como jwt
@@ -12,10 +12,10 @@ const authenticate = (req, res, next) => {
       if (token === 'valid-token') {
         next(); // Token válido, continuar
       } else {
-        throw new Error('Token inválido');
+        throw new Error(`Token inválido`);
       }
     } catch (error) {
-      return res.status(401).json({ error: 'Acceso no autorizado. Token inválido.' });
+      return res.status(401).json({ error: `Acceso no autorizado. Token inválido.` });
     }
 };
 
