@@ -18,7 +18,7 @@ const vehicleSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     dateVehicleCreation: { type: Date, required: true, default: Date.now },
     dateLastVehicleModification: { type: Date, required: true, default: Date.now },
-    dateLastLocationModification: { type: Date, required: true, default: Date.now }
+    dateLastLocationModification: { type: Date, default: Date.now }
 
 }, { collection: 'Vehicle' });
 
