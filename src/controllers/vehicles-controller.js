@@ -13,9 +13,9 @@ exports.createVehicle = async (req, res) => {
             type: typeParam,
             brand: brandParam,
             model: modelParam,
-            notes: notesParam,
-            userId: userIdParam
+            notes: notesParam
         } = req.body;
+        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
 
         // Check if the license plate already exists.
         const existingVehicle = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
@@ -34,7 +34,7 @@ exports.createVehicle = async (req, res) => {
             userId: userIdParam,
             dateVehicleCreation: new Date(),
             dateLastVehicleModification: new Date(),
-            dateLastLocationModification: new Date()
+            dateLastLocationModification: null
         });
 
         // Save vehicle in the database.
@@ -68,14 +68,14 @@ exports.createVehicle = async (req, res) => {
 
 
 
-exports.getVehiclesByUserId = async (req, res) => {
+exports.getVehicles = async (req, res) => {
 
     try {
 
         // Get parameters.
-        const userIdParam = req.query.userId;
+        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
         if (!userIdParam) {
-            return res.status(400).json({ message: `The user id is required.` });
+            return res.status(400).json({ message: `The user id was not found.` });
         }
 
         // Get vehicles.
@@ -112,7 +112,7 @@ exports.getVehiclesByUserId = async (req, res) => {
 
 
 
-exports.getVehicleByLicensePlate = async (req, res) => {
+exports.getVehicle = async (req, res) => {
 
     try {
 
@@ -121,11 +121,17 @@ exports.getVehicleByLicensePlate = async (req, res) => {
         if (!licensePlateParam) {
             return res.status(400).json({ message: `The license plate is required.` });
         }
-
+        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
+        
         // Get vehicle.
         const vehicle = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
         if (!vehicle) {
             return res.status(404).json({ message: `Vehicle not found.` });
+        }
+
+        // Check if the user is authorized to access the vehicle.
+        if (vehicle.userId !== userIdParam) {
+            return res.status(403).json({ message: `The user is not authorized to access this vehicle.` });
         }
 
         // Return vehicle.
@@ -165,7 +171,7 @@ exports.updateVehicle = async (req, res) => {
         if (!licensePlateParam) {
             return res.status(400).json({ message: `The license plate is required.` });
         }
-
+        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
         const vehicleParam = req.body;
 
         // Exclude _id, licensePlate, userId and dates from updates.
@@ -209,6 +215,11 @@ exports.updateVehicle = async (req, res) => {
             return res.status(404).json({ message: `Vehicle not found.` });
         }
 
+        // Check if the user is authorized to access the vehicle.
+        if (vehicle1.userId !== userIdParam) {
+            return res.status(403).json({ message: `The user is not authorized to access this vehicle.` });
+        }
+
         // Update vehicle in the database.
         const vehicleId = vehicle1._id;
         const vehicle2 = await Vehicle.findByIdAndUpdate(vehicleId, vehicleParam, {
@@ -217,7 +228,7 @@ exports.updateVehicle = async (req, res) => {
         });
 
         if (!vehicle2) {
-            return res.status(404).json({ message: `Vehicle not found.` });
+            return res.status(404).json({ message: `Error when updating the vehicle.` });
         }
 
         // Return vehicle.
@@ -240,6 +251,50 @@ exports.updateVehicle = async (req, res) => {
         // Log error.
         console.error({ message: `Error when updating the vehicle: ${error}` });
         res.status(500).json({ message: `Error when updating the vehicle.` });
+
+    }
+
+};
+
+
+
+
+exports.deleteVehicle = async (req, res) => {
+
+    try {
+
+        // Get parameters.
+        const licensePlateParam = req.params.licensePlate;
+        if (!licensePlateParam) {
+            return res.status(400).json({ message: `The license plate is required.` });
+        }
+        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
+        
+        // Get vehicle.
+        const vehicle = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
+        if (!vehicle) {
+            return res.status(404).json({ message: `Vehicle not found.` });
+        }
+
+        // Check if the user is authorized to access the vehicle.
+        if (vehicle.userId !== userIdParam) {
+            return res.status(403).json({ message: `The user is not authorized to access this vehicle.` });
+        }
+
+        // Delete vehicle from the database.
+        const result = await Vehicle.deleteOne({ licensePlate: licensePlateParam }).exec();
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: `Error when deleting the vehicle.` });
+        }
+        
+        // Respond.
+        res.status(200).json({ message: `Vehicle deleted successfully.` });
+
+    } catch (error) {
+
+        // Log error.
+        console.error({ message: `Error when deleting the vehicle: ${error}` });
+        res.status(500).json({ message: `Error when deleting the vehicle.` });
 
     }
 

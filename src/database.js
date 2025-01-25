@@ -1,11 +1,21 @@
+require('dotenv').config({ path: '.env.development' });
 const mongoose = require('mongoose');
-const uri = 'mongodb://admin:admin@localhost:27017/geopark?authSource=admin';
+
+// Environment variables for MongoDB connection.
+const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE, MONGODB_AUTH_SOURCE } = process.env;
+
+// URI recommended for development environments (local instance, for example).
+const uri = `mongodb://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=${MONGODB_AUTH_SOURCE}`;
+
+// URI recommended for production environments (MongoDB Atlas, for example).
+// const uri = `mongodb+srv://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@${MONGODB_HOST}/${MONGODB_DATABASE}?retryWrites=true&w=majority`;
 
 
 
 
 const connectToDatabase = async () => {
 
+    /*
     try {
 
         await mongoose.connect(uri);
@@ -17,6 +27,11 @@ const connectToDatabase = async () => {
         process.exit(1);
 
     }
+    */
+
+    mongoose.connect(uri)
+        .then(() => console.log({ message: `Database connected successfully.` }))
+        .catch(err => console.error({ message: `Database connection error: `, err }));
 
 };
 
@@ -25,6 +40,7 @@ const connectToDatabase = async () => {
 
 const disconnectFromDatabase = async () => {
 
+    /*
     try {
 
         await mongoose.disconnect();
@@ -36,6 +52,11 @@ const disconnectFromDatabase = async () => {
         process.exit(1);
 
     }
+    */
+
+    mongoose.disconnect()
+        .then(() => console.log({ message: `Database disconnected successfully.` }))
+        .catch(err => console.error({ message: `Database disconnection error: `, err }));
 
 };
 

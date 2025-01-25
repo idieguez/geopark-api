@@ -1,22 +1,42 @@
-// Middleware para verificar la autenticación
-const authenticate = (req, res, next) => {
-    const token = req.headers['authorization'];
-    
-    if (!token) {
-      return res.status(401).json({ error: `Acceso no autorizado. Token no proporcionado.` });
-    }
-  
-    // Aquí podrías verificar el token usando alguna librería como jwt
-    try {
-      // Ejemplo: Verificación ficticia del token
-      if (token === 'valid-token') {
-        next(); // Token válido, continuar
-      } else {
-        throw new Error(`Token inválido`);
-      }
-    } catch (error) {
-      return res.status(401).json({ error: `Acceso no autorizado. Token inválido.` });
-    }
-};
+const jwt = require('jsonwebtoken');
 
-module.exports = authenticate;
+const { JWT_SECRET } = process.env;
+
+
+
+
+// Middleware to verify authentication.
+module.exports = function(req, res, next) {
+
+    try {
+
+        // Get token from the header.
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(401).json({ message: `A valid token was not found. Authorization denied.` });
+        }
+
+        // Verify the token.
+        const decoded = jwt.verify(token, JWT_SECRET);
+        if (!decoded) {
+            return res.status(401).json({ message: `Invalid or expired token. Authorization denied.` });
+        }
+
+        if (!decoded.userId || decoded.userId === '') {
+            return res.status(401).json({ message: `The user id is not included in the token. Authorization denied.` });
+        }
+
+        // Add the user id to the request object.
+        req.userId = decoded.userId;
+        
+        // Continue with the following function in the middleware chain.
+        next();
+
+    } catch (err) {
+
+        console.error({ message: `Invalid or expired token. Authorization denied. Error: ${err}` });
+        res.status(401).json({ message: `Invalid or expired token. Authorization denied.` });
+
+    }
+
+};
