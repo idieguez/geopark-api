@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 
 
 
+/*
+ * Vehicle schema.
+ */
+
 const vehicleSchema = new mongoose.Schema({
 
     licensePlate: { type: String, required: true },
@@ -14,7 +18,6 @@ const vehicleSchema = new mongoose.Schema({
         longitude: { type: Number, default: null }
     },
     notes: { type: String, default: '' },
-    // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     userId: { type: String, required: true },
     dateVehicleCreation: { type: Date, required: true, default: Date.now },
     dateLastVehicleModification: { type: Date, required: true, default: Date.now },

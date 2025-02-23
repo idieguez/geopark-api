@@ -5,7 +5,10 @@ const { JWT_SECRET } = process.env;
 
 
 
-// Middleware to verify authentication.
+/*
+ * Middleware to verify authentication.
+ */
+
 module.exports = function(req, res, next) {
 
     try {

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const loggerMiddleware = require('./middlewares/logger-middleware');
 const authRoutes = require('./routes/auth-routes');
 const usersRoutes = require('./routes/users-routes');
 const vehiclesRoutes = require('./routes/vehicles-routes');
@@ -11,6 +12,9 @@ const vehiclesRoutes = require('./routes/vehicles-routes');
 // Create the Express application.
 const app = express();
 
+
+
+
 // Configure CORS.
 const corsOptions = {
     origin: 'http://localhost:3000',
@@ -18,6 +22,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
+
+
 
 // Configure and use the rate limiter.
 const limiter = rateLimit({
@@ -29,8 +36,20 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+
+
+
+// Middleware for logging.
+app.use(loggerMiddleware);
+
+
+
+
 // Disable the X-Powered-By header.
 app.disable('x-powered-by');
+
+
+
 
 // Middleware for parsing JSON.
 app.use(express.json());
