@@ -10,7 +10,7 @@
 			"name": "auth",
 			"item": [
 				{
-					"name": "auth/register/",
+					"name": "/auth/register/",
 					"event": [
 						{
 							"listen": "test",
@@ -50,7 +50,7 @@
 					"response": []
 				},
 				{
-					"name": "auth/login/",
+					"name": "/auth/login/",
 					"event": [
 						{
 							"listen": "test",
@@ -69,6 +69,16 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
@@ -76,7 +86,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"john@example.com\",\r\n  \"password\": \"john.2\"\r\n}\r\n",
+							"raw": "{\r\n  \"email\": \"john@example.com\",\r\n  \"password\": \"john\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -103,7 +113,7 @@
 			"name": "users",
 			"item": [
 				{
-					"name": "users/",
+					"name": "/users/",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -127,7 +137,7 @@
 					"response": []
 				},
 				{
-					"name": "users/",
+					"name": "/users/",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -160,7 +170,7 @@
 					"response": []
 				},
 				{
-					"name": "users/",
+					"name": "/users/",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -189,7 +199,7 @@
 			"name": "vehicles",
 			"item": [
 				{
-					"name": "vehicles/",
+					"name": "/vehicles/",
 					"event": [
 						{
 							"listen": "test",
@@ -242,7 +252,7 @@
 					"response": []
 				},
 				{
-					"name": "vehicles",
+					"name": "/vehicles/",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -253,19 +263,20 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/vehicles",
+							"raw": "{{base_url}}/vehicles/",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"vehicles"
+								"vehicles",
+								""
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "vehicles/{licensePlate}",
+					"name": "/vehicles/{licensePlate}",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -289,7 +300,7 @@
 					"response": []
 				},
 				{
-					"name": "vehicles/{licensePlate}",
+					"name": "/vehicles/{licensePlate}",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -322,7 +333,7 @@
 					"response": []
 				},
 				{
-					"name": "vehicles/{licensePlate}",
+					"name": "/vehicles/{licensePlate}",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -373,7 +384,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://127.0.0.1:3000/api",
+			"value": "http://localhost:3001/api",
 			"type": "string"
 		},
 		{

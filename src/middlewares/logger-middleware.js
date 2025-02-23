@@ -1,7 +1,10 @@
-// Middleware para registrar las solicitudes entrantes
-const requestLogger = (req, res, next) => {
-    console.log({ message: `[${new Date().toISOString()}] ${req.method} ${req.url}` });
-    next(); // Pasa al siguiente middleware o controlador
-};
+/*
+ * Middleware that registers in console the received request.
+ */
 
-module.exports = requestLogger;
+module.exports = function(req, res, next) {
+
+    console.log({ message: `${req.method} ${req.url}` });
+    next();                                                                                         // Call the next middleware.
+
+};

@@ -8,6 +8,11 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
 
 
+/*
+ * Register a new user.
+ * POST /api/auth/register/
+ */
+
 exports.register = async (req, res) => {
 
     let userId = null;
@@ -53,13 +58,6 @@ exports.register = async (req, res) => {
         await user.save();
         userId = user._id;
 
-        // Generate a JWT token.
-        /* const token = jwt.sign(
-            { userId: userId },                 // Payload data (user ID).
-            JWT_SECRET,                         // JWT secret key.
-            { expiresIn: JWT_EXPIRES_IN }       // Token expiration.
-        ); */
-
         // Return user.
         res.status(201).json({
             _id: user._id,
@@ -72,8 +70,7 @@ exports.register = async (req, res) => {
             notes: user.notes,
             dateUserCreation: user.dateUserCreation,
             dateLastUserModification: user.dateLastUserModification,
-            dateLastPasswordModification: user.dateLastPasswordModification /* ,
-            token: token */
+            dateLastPasswordModification: user.dateLastPasswordModification
         });
 
     } catch (error) {
@@ -106,6 +103,11 @@ exports.register = async (req, res) => {
 
 
 
+
+/*
+ * Login a user.
+ * POST /api/auth/login/
+ */
 
 exports.login = async (req, res) => {
 

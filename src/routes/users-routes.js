@@ -6,7 +6,10 @@ const usersController = require('../controllers/users-controller');
 
 
 
-/* router.post('', authMiddleware, usersController.createUser); */
+/*
+ * Routes for users operations.
+ */
+
 router.get('/', authMiddleware, usersController.getUser);
 router.patch('/', authMiddleware, usersController.updateUser);
 router.delete('/', authMiddleware, usersController.deleteUser);

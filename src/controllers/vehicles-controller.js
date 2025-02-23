@@ -3,6 +3,11 @@ const Vehicle = require('../models/Vehicle');
 
 
 
+/*
+ * Create a new vehicle.
+ * POST /api/vehicles/
+ */
+
 exports.createVehicle = async (req, res) => {
 
     try {
@@ -68,6 +73,11 @@ exports.createVehicle = async (req, res) => {
 
 
 
+/*
+ * Get all vehicles of a user.
+ * GET /api/vehicles/
+ */
+
 exports.getVehicles = async (req, res) => {
 
     try {
@@ -111,6 +121,11 @@ exports.getVehicles = async (req, res) => {
 
 
 
+
+/*
+ * Get a vehicle by license plate.
+ * GET /api/vehicles/:licensePlate
+ */
 
 exports.getVehicle = async (req, res) => {
 
@@ -161,6 +176,11 @@ exports.getVehicle = async (req, res) => {
 
 
 
+
+/*
+ * Update a vehicle by license plate.
+ * PATCH /api/vehicles/:licensePlate
+ */
 
 exports.updateVehicle = async (req, res) => {
 
@@ -258,6 +278,11 @@ exports.updateVehicle = async (req, res) => {
 
 
 
+
+/*
+ * Delete a vehicle by license plate.
+ * DELETE /api/vehicles/:licensePlate
+ */
 
 exports.deleteVehicle = async (req, res) => {
 

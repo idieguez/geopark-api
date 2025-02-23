@@ -72,7 +72,7 @@ Es necesario que se tenga previamente instalado y configurado Node.js, Git y Mon
 Para utilizar la API, realiza solicitudes HTTP a los endpoints disponibles. A continuación se muestra un ejemplo de cómo obtener información sobre un vehículo específico:
 
 ```bash
-curl --location 'http://127.0.0.1:3000/api/vehicles/2380MBF' \
+curl --location 'http://localhost:3000/api/vehicles/2380MBF' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzkzODE2MDVhZmE0NjFiNGIwYWJlMjciLCJpYXQiOjE3Mzc3MjAxNzIsImV4cCI6MTczNzgwNjU3Mn0.354X9zF4YYwxGf1eIImm7CCsWnc1_7kgM3Ekji_hef8'
 ```
 

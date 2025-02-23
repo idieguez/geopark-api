@@ -4,75 +4,10 @@ const bcrypt = require('bcrypt');
 
 
 
- /* exports.createUser = async (req, res) => {
-
-    try {
-
-        // Get parameters.
-        const {
-            name: nameParam,
-            surname: surnameParam,
-            secondSurname: secondSurnameParam,
-            email: emailParam,
-            password: passwordParam,
-            newsletter: newsletterParam,
-            notes: notesParam
-        } = req.body;
-
-        // Check if the email already exists.
-        const existingUser = await User.findOne({ email: emailParam }).exec();
-        if (existingUser) {
-            return res.status(409).json({ message: `The email address is already registered.` });
-        }
-
-        // Hash the password before saving it.
-        const hashedPassword = await bcrypt.hash(passwordParam, 12);
-
-        // Create new user.
-        const user = new User({
-            name: nameParam,
-            surname: surnameParam,
-            secondSurname: secondSurnameParam,
-            email: emailParam,
-            password: hashedPassword,
-            newsletter: newsletterParam,
-            settings: { appearance: 'auto' },
-            notes: notesParam,
-            dateUserCreation: new Date(),
-            dateLastUserModification: new Date(),
-            dateLastPasswordModification: new Date()
-        });
-
-        // Save user in the database.
-        await user.save();
-
-        // Return user.
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            surname: user.surname,
-            secondSurname: user.secondSurname,
-            email: user.email,
-            newsletter: user.newsletter,
-            settings: user.settings,
-            notes: user.notes,
-            dateUserCreation: user.dateUserCreation,
-            dateLastUserModification: user.dateLastUserModification,
-            dateLastPasswordModification: user.dateLastPasswordModification
-        });
-
-    } catch (error) {
-
-        // Log error.
-        console.error({ message: `Error when creating the user: ${error}` });
-        res.status(500).json({ message: `Error when creating the user.` });
-
-    }
-
-}; */
-
-
-
+/*
+ * Get a user.
+ * GET /api/users/
+ */
 
 exports.getUser = async (req, res) => {
 
@@ -114,6 +49,11 @@ exports.getUser = async (req, res) => {
 
 
 
+
+/*
+ * Update a user.
+ * PATCH /api/users/
+ */
 
 exports.updateUser = async (req, res) => {
 
@@ -188,6 +128,11 @@ exports.updateUser = async (req, res) => {
 
 
 
+
+/*
+ * Delete a user.
+ * DELETE /api/users/
+ */
 
 exports.deleteUser = async (req, res) => {
 

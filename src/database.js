@@ -13,21 +13,11 @@ const uri = `mongodb://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@$
 
 
 
+/*
+ * Connects to the MongoDB database.
+ */
+
 const connectToDatabase = async () => {
-
-    /*
-    try {
-
-        await mongoose.connect(uri);
-        console.log({ message: `Connected to MongoDB.` });
-
-    } catch (error) {
-
-        console.error({ message: `Error connecting to MongoDB: ${error.message}` });
-        process.exit(1);
-
-    }
-    */
 
     mongoose.connect(uri)
         .then(() => console.log({ message: `Database connected successfully.` }))
@@ -38,21 +28,11 @@ const connectToDatabase = async () => {
 
 
 
+/*
+ * Disconnects from the MongoDB database.
+ */
+
 const disconnectFromDatabase = async () => {
-
-    /*
-    try {
-
-        await mongoose.disconnect();
-        console.log({ message: `Disconnected from MongoDB.` });
-
-    } catch (error) {
-
-        console.error({ message: `Error disconnecting from MongoDB: ${error.message}` });
-        process.exit(1);
-
-    }
-    */
 
     mongoose.disconnect()
         .then(() => console.log({ message: `Database disconnected successfully.` }))

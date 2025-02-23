@@ -37,5 +37,9 @@ const shutdown = () => {
 
 };
 
+
+
+
+// Shutdown signals.
 process.on('SIGINT', shutdown);             // For interruptions (Ctrl+C).
 process.on('SIGTERM', shutdown);            // For termination signals.
