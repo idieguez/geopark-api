@@ -1,7 +1,10 @@
+require('dotenv').config({ path: '.env.development' });
 const express = require('express');
 const { connectToDatabase, disconnectFromDatabase } = require('./database');
 const app = require('./app');
-const PORT = process.env.PORT || 3000;
+
+// Environment variables for MongoDB connection.
+const { APP_PORT } = process.env;
 
 
 
@@ -13,9 +16,9 @@ connectToDatabase();
 
 
 // Start app.
-const server = app.listen(PORT, () => {
+const server = app.listen(APP_PORT, () => {
 
-    console.log({ message: `Server is running on port ${PORT}.` });
+    console.log({ message: `Server is running on port ${APP_PORT}.` });
 
 });
 
