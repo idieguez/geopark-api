@@ -1,3 +1,4 @@
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = process.env;
@@ -9,7 +10,7 @@ const { JWT_SECRET } = process.env;
  * Middleware to verify authentication.
  */
 
-module.exports = function(req, res, next) {
+module.exports = async function(req, res, next) {
 
     try {
 
@@ -27,6 +28,12 @@ module.exports = function(req, res, next) {
 
         if (!decoded.userId || decoded.userId === '') {
             return res.status(401).json({ message: `The user id is not included in the token. Authorization denied.` });
+        }
+
+        // Verify the user id exists.
+        const user = await User.findOne({ _id: decoded.userId }).exec();
+        if (!user) {
+            return res.status(401).json({ message: `Invalid or expired token. Authorization denied.` });
         }
 
         // Add the user id to the request object.
