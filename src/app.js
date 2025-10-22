@@ -17,7 +17,7 @@ const app = express();
 
 // Configure CORS.
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'http://127.0.0.1:3000',
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
 };
 app.use(cors(corsOptions));
