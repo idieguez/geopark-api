@@ -17,7 +17,7 @@ const uri = `mongodb://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@$
  * Connects to the MongoDB database.
  */
 
-const connectToDatabase = async () => {
+exports.connectToDatabase = async function () {
 
     mongoose.connect(uri)
         .then(() => console.log({ message: `Database connected successfully.` }))
@@ -32,15 +32,10 @@ const connectToDatabase = async () => {
  * Disconnects from the MongoDB database.
  */
 
-const disconnectFromDatabase = async () => {
+exports.disconnectFromDatabase = async function () {
 
     mongoose.disconnect()
         .then(() => console.log({ message: `Database disconnected successfully.` }))
         .catch(err => console.error({ message: `Database disconnection error: `, err }));
 
 };
-
-
-
-
-module.exports = { connectToDatabase, disconnectFromDatabase };

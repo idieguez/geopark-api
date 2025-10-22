@@ -1,7 +1,7 @@
 require('dotenv').config({ path: '.env.development' });
 const express = require('express');
 const { connectToDatabase, disconnectFromDatabase } = require('./database');
-const app = require('./app');
+const { app } = require('./app');
 
 // Environment variables for MongoDB connection.
 const { APP_PORT } = process.env;
@@ -16,7 +16,7 @@ connectToDatabase();
 
 
 // Start app.
-const server = app.listen(APP_PORT, () => {
+const server = app.listen(APP_PORT, function () {
 
     console.log({ message: `Server is running on port ${APP_PORT}.` });
 
@@ -26,10 +26,10 @@ const server = app.listen(APP_PORT, () => {
 
 
 // Disconnection from the database.
-const shutdown = () => {
+const shutdown = function () {
 
     console.log({ message: `Shutting down the server...` });
-    server.close(async () => {
+    server.close(async function () {
         await disconnectFromDatabase();
         console.log({ message: `Connections closed. Shutdown completed.` });
         process.exit(0);

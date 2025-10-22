@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = process.env;
@@ -10,7 +10,7 @@ const { JWT_SECRET } = process.env;
  * Middleware to verify authentication.
  */
 
-module.exports = async function(req, res, next) {
+exports.authMiddleware = async function(req, res, next) {
 
     try {
 

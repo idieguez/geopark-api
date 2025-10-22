@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -13,7 +13,7 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
  * POST /api/auth/register/
  */
 
-exports.register = async (req, res) => {
+exports.register = async function (req, res) {
 
     let userId = null;
 
@@ -109,7 +109,7 @@ exports.register = async (req, res) => {
  * POST /api/auth/login/
  */
 
-exports.login = async (req, res) => {
+exports.login = async function (req, res) {
 
     try {
 

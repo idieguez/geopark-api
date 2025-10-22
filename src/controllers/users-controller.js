@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
 
 
@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
  * GET /api/users/
  */
 
-exports.getUser = async (req, res) => {
+exports.getUser = async function (req, res) {
 
     try {
 
@@ -55,7 +55,7 @@ exports.getUser = async (req, res) => {
  * PATCH /api/users/
  */
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async function (req, res) {
 
     try {
 
@@ -134,7 +134,7 @@ exports.updateUser = async (req, res) => {
  * DELETE /api/users/
  */
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async function (req, res) {
 
     try {
 
