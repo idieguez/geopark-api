@@ -1,4 +1,4 @@
-const Vehicle = require('../models/Vehicle');
+const { Vehicle } = require('../models/Vehicle');
 
 
 
@@ -8,7 +8,7 @@ const Vehicle = require('../models/Vehicle');
  * POST /api/vehicles/
  */
 
-exports.createVehicle = async (req, res) => {
+exports.createVehicle = async function (req, res) {
 
     try {
 
@@ -78,7 +78,7 @@ exports.createVehicle = async (req, res) => {
  * GET /api/vehicles/
  */
 
-exports.getVehicles = async (req, res) => {
+exports.getVehicles = async function (req, res) {
 
     try {
 
@@ -127,7 +127,7 @@ exports.getVehicles = async (req, res) => {
  * GET /api/vehicles/:licensePlate
  */
 
-exports.getVehicle = async (req, res) => {
+exports.getVehicle = async function (req, res) {
 
     try {
 
@@ -182,7 +182,7 @@ exports.getVehicle = async (req, res) => {
  * PATCH /api/vehicles/:licensePlate
  */
 
-exports.updateVehicle = async (req, res) => {
+exports.updateVehicle = async function (req, res) {
 
     try {
 
@@ -284,7 +284,7 @@ exports.updateVehicle = async (req, res) => {
  * DELETE /api/vehicles/:licensePlate
  */
 
-exports.deleteVehicle = async (req, res) => {
+exports.deleteVehicle = async function (req, res) {
 
     try {
 

@@ -1,7 +1,16 @@
 const express = require('express');
-const router = express.Router();
-const authMiddleware = require('../middlewares/auth-middleware');
-const vehiclesController = require('../controllers/vehicles-controller');
+const { authMiddleware } = require('../middlewares/auth-middleware');
+const { createVehicle, getVehicles, getVehicle, updateVehicle, deleteVehicle } = require('../controllers/vehicles-controller');
+
+
+
+
+/*
+ * Router creation.
+ */
+
+exports.router = express.Router();
+const router = exports.router;
 
 
 
@@ -10,13 +19,8 @@ const vehiclesController = require('../controllers/vehicles-controller');
  * Routes for vehicles operations.
  */
 
-router.post('/', authMiddleware, vehiclesController.createVehicle);
-router.get('/', authMiddleware, vehiclesController.getVehicles);
-router.get('/:licensePlate', authMiddleware, vehiclesController.getVehicle);
-router.patch('/:licensePlate', authMiddleware, vehiclesController.updateVehicle);
-router.delete('/:licensePlate', authMiddleware, vehiclesController.deleteVehicle);
-
-
-
-
-module.exports = router;
+router.post('/', authMiddleware, createVehicle);
+router.get('/', authMiddleware, getVehicles);
+router.get('/:licensePlate', authMiddleware, getVehicle);
+router.patch('/:licensePlate', authMiddleware, updateVehicle);
+router.delete('/:licensePlate', authMiddleware, deleteVehicle);

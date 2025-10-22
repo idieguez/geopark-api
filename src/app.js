@@ -1,16 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const loggerMiddleware = require('./middlewares/logger-middleware');
-const authRoutes = require('./routes/auth-routes');
-const usersRoutes = require('./routes/users-routes');
-const vehiclesRoutes = require('./routes/vehicles-routes');
+const { loggerMiddleware } = require('./middlewares/logger-middleware');
+const { router: authRoutes } = require('./routes/auth-routes');
+const { router: usersRoutes } = require('./routes/users-routes');
+const { router: vehiclesRoutes } = require('./routes/vehicles-routes');
 
 
 
 
 // Create the Express application.
-const app = express();
+exports.app = express();
+const app = exports.app;
 
 
 
@@ -61,8 +62,3 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/vehicles', vehiclesRoutes);
-
-
-
-
-module.exports = app;
