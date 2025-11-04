@@ -43,8 +43,36 @@ exports.registerSchema = z.object({
         
         notes: z.string().trim()
             .max(500, 'Notes cannot exceed 500 characters')
+            .transform(value => (value === '' ? null : value))
+            .nullable()
             .optional()
+            .default(null)
         
+    }).strict()
+
+});
+
+
+
+
+exports.loginSchema = z.object({
+
+    body: z.object({
+
+        email: z.string().trim()
+            .min(1, 'Email is required')
+            .email('Invalid email format')
+            .max(255, 'Email is too long')
+            .transform(s => s.toLowerCase()),
+        
+        password: z.string()
+            .min(8, 'Password must be at least 8 characters')
+            .max(40, 'Password cannot exceed 40 characters')
+            .regex(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[^\s]{8,40}$/,
+                'Password must contain at least one letter, one number and one special character'
+            )
+
     }).strict()
 
 });
