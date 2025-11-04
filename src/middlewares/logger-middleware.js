@@ -1,5 +1,5 @@
 /*
- * Middleware that registers in console the received request.
+ * Middleware to register in console the received request.
  */
 
 exports.loggerMiddleware = function(req, res, next) {

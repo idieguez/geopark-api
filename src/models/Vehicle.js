@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
  * Vehicle schema.
  */
 
-const vehicleSchema = new mongoose.Schema({
+exports.Vehicle = mongoose.model('Vehicle', new mongoose.Schema({
 
     licensePlate: { type: String, required: true },
     type: { type: String, enum: ['car', 'motorbike'], required: true },
@@ -23,6 +23,4 @@ const vehicleSchema = new mongoose.Schema({
     dateLastVehicleModification: { type: Date, required: true, default: Date.now },
     dateLastLocationModification: { type: Date, default: Date.now }
 
-}, { collection: 'Vehicle' });
-
-exports.Vehicle = mongoose.model('Vehicle', vehicleSchema);
+}, { collection: 'Vehicle' }));

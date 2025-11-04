@@ -3,6 +3,10 @@ const { z } = require('zod');
 
 
 
+/*
+ * User registration validation schema.
+ */
+
 exports.registerSchema = z.object({
 
     body: z.object({
@@ -54,6 +58,10 @@ exports.registerSchema = z.object({
 
 
 
+
+/*
+ * User login validation schema.
+ */
 
 exports.loginSchema = z.object({
 
