@@ -1,5 +1,5 @@
 const { validateSchema } = require('./validation-middleware');
-const { registerSchema } = require('../schemas/auth-schema');
+const { registerSchema, loginSchema } = require('../schemas/auth-schema');
 
 
 
@@ -9,3 +9,4 @@ const { registerSchema } = require('../schemas/auth-schema');
  */
 
 exports.validateRegister = validateSchema(registerSchema);
+exports.validateLogin = validateSchema(loginSchema);
