@@ -39,7 +39,7 @@ exports.authMiddleware = async function(req, res, next) {
         // Add the user id to the request object.
         req.userId = decoded.userId;
         
-        // Continue with the following function in the middleware chain.
+        // Call the next middleware.
         next();
 
     } catch (err) {

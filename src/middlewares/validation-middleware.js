@@ -1,8 +1,3 @@
-const { z } = require('zod');
-
-
-
-
 /*
  * Middleware to validate input data.
  */
@@ -24,7 +19,7 @@ exports.validateSchema = function (schema) {
                 if (parsed.params) req.params = parsed.params;
             }
 
-            return next();
+            return next();                                                                          // Call the next middleware.
 
         } catch (err) {
 

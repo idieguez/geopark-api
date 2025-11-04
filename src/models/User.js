@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
  * User schema.
  */
 
-const userSchema = new mongoose.Schema({
+exports.User = mongoose.model('User', new mongoose.Schema({
 
     name: { type: String, required: true },
     surname: { type: String, required: true },
@@ -23,6 +23,4 @@ const userSchema = new mongoose.Schema({
     dateLastUserModification: { type: Date, required: true, default: Date.now },
     dateLastPasswordModification: { type: Date, required: true, default: Date.now }
 
-}, { collection: 'User' });
-
-exports.User = mongoose.model('User', userSchema);
+}, { collection: 'User' }));
