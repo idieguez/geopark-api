@@ -6,6 +6,9 @@ const { router: authRoutes } = require('./routes/auth-routes');
 const { router: usersRoutes } = require('./routes/users-routes');
 const { router: vehiclesRoutes } = require('./routes/vehicles-routes');
 
+// Environment variables for MongoDB connection.
+const { CORS_ORIGIN, RATELIMIT_MIN, RATELIMIT_NREQ } = process.env;
+
 
 
 
@@ -18,7 +21,7 @@ const app = exports.app;
 
 // Configure CORS.
 const corsOptions = {
-    origin: 'http://127.0.0.1:3000',
+    origin: CORS_ORIGIN,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
 };
 app.use(cors(corsOptions));
@@ -29,8 +32,8 @@ app.options('*', cors(corsOptions));
 
 // Configure and use the rate limiter.
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,                                       // 15 minutes.
-    max: 100,                                                       // Limit to 100 requests per IP every 15 minutes.
+    windowMs: RATELIMIT_MIN * 60 * 1000,                            // X minutes.
+    max: RATELIMIT_NREQ,                                            // Limit to Y requests per IP every X minutes.
     message: `Too many requests from this IP, try again later.`,
     standardHeaders: true,                                          // Reports rate limits with standard headers.
     legacyHeaders: false,                                           // Disable obsolete headers.
