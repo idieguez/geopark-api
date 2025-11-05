@@ -1,12 +1,11 @@
 const { validateSchema } = require('../validation-middleware');
-/* const { registerSchema, loginSchema } = require('../../schemas/auth-schema'); */
+const { updateUserSchema } = require('../../schemas/users-schema');
 
 
 
 
 /*
- * Middleware to validate vehicles.
+ * Middleware to validate users.
  */
 
-/* exports.validateRegister = validateSchema(registerSchema);
-exports.validateLogin = validateSchema(loginSchema); */
+exports.validateUpdateUser = validateSchema(updateUserSchema);

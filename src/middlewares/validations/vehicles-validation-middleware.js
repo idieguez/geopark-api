@@ -1,5 +1,5 @@
 const { validateSchema } = require('../validation-middleware');
-/* const { registerSchema, loginSchema } = require('../../schemas/auth-schema'); */
+const { createVehicleSchema, getVehicleSchema, updateVehicleSchema, deleteVehicleSchema } = require('../../schemas/vehicles-schema');
 
 
 
@@ -8,5 +8,7 @@ const { validateSchema } = require('../validation-middleware');
  * Middleware to validate vehicles.
  */
 
-/* exports.validateRegister = validateSchema(registerSchema);
-exports.validateLogin = validateSchema(loginSchema); */
+exports.validateCreateVehicle = validateSchema(createVehicleSchema);
+exports.validateGetVehicle = validateSchema(getVehicleSchema);
+exports.validateUpdateVehicle = validateSchema(updateVehicleSchema);
+exports.validateDeleteVehicle = validateSchema(deleteVehicleSchema);
