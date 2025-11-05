@@ -1,4 +1,3 @@
-require('dotenv').config({ path: '.env.development' });
 const mongoose = require('mongoose');
 
 // Environment variables for MongoDB connection.
