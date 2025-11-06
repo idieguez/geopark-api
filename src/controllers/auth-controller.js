@@ -60,17 +60,9 @@ exports.register = async function (req, res) {
 
         // Return user.
         res.status(201).json({
-            _id: user._id,
             name: user.name,
             surname: user.surname,
-            secondSurname: user.secondSurname,
-            email: user.email,
-            newsletter: user.newsletter,
-            settings: user.settings,
-            notes: user.notes,
-            dateUserCreation: user.dateUserCreation,
-            dateLastUserModification: user.dateLastUserModification,
-            dateLastPasswordModification: user.dateLastPasswordModification
+            email: user.email
         });
 
     } catch (error) {

@@ -7,7 +7,7 @@ const { router: usersRoutes } = require('./routes/users-routes');
 const { router: vehiclesRoutes } = require('./routes/vehicles-routes');
 
 // Environment variables for MongoDB connection.
-const { CORS_ORIGIN, RATELIMIT_MIN, RATELIMIT_NREQ } = process.env;
+const { CORS_ORIGIN, RL_GENERAL_MIN, RL_GENERAL_NREQ, RL_AUTH_MIN, RL_AUTH_NREQ } = process.env;
 
 
 
@@ -31,14 +31,23 @@ app.options('*', cors(corsOptions));
 
 
 // Configure and use the rate limiter.
-const limiter = rateLimit({
-    windowMs: RATELIMIT_MIN * 60 * 1000,                            // X minutes.
-    max: RATELIMIT_NREQ,                                            // Limit to Y requests per IP every X minutes.
-    message: `Too many requests from this IP, try again later.`,
+const generalLimiter = rateLimit({
+    windowMs: RL_GENERAL_MIN * 60 * 1000,                           // X minutes.
+    max: RL_GENERAL_NREQ,                                           // Limit to Y requests per IP every X minutes.
+    message: `Too many requests from this IP. Please try again after ${RL_GENERAL_MIN} minutes.`,
     standardHeaders: true,                                          // Reports rate limits with standard headers.
     legacyHeaders: false,                                           // Disable obsolete headers.
 });
-app.use(limiter);
+
+const authLimiter = rateLimit({
+    windowMs: RL_AUTH_MIN * 60 * 1000,                              // X minutes.
+    max: RL_AUTH_NREQ,                                              // Limit to Y requests per IP every X minutes.
+    message: `Too many authentication attempts from this IP. Please try again after ${RL_GENERAL_MIN} minutes.`,
+    standardHeaders: true,                                          // Reports rate limits with standard headers.
+    legacyHeaders: false,                                           // Disable obsolete headers.
+});
+
+app.use(generalLimiter);
 
 
 
@@ -83,6 +92,6 @@ app.use((err, req, res, next) => {
 
 
 // Routes.
-app.use('/api/auth', authRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/vehicles', vehiclesRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/users', generalLimiter, usersRoutes);
+app.use('/api/vehicles', generalLimiter, vehiclesRoutes);
