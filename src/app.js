@@ -34,7 +34,7 @@ app.options('*', cors(corsOptions));
 const generalLimiter = rateLimit({
     windowMs: RL_GENERAL_MIN * 60 * 1000,                           // X minutes.
     max: RL_GENERAL_NREQ,                                           // Limit to Y requests per IP every X minutes.
-    message: `Too many requests from this IP. Please try again after ${RL_GENERAL_MIN} minutes.`,
+    message: { message: `Too many requests from this IP. Please try again after ${RL_GENERAL_MIN} minutes.` },
     standardHeaders: true,                                          // Reports rate limits with standard headers.
     legacyHeaders: false,                                           // Disable obsolete headers.
 });
@@ -42,7 +42,7 @@ const generalLimiter = rateLimit({
 const authLimiter = rateLimit({
     windowMs: RL_AUTH_MIN * 60 * 1000,                              // X minutes.
     max: RL_AUTH_NREQ,                                              // Limit to Y requests per IP every X minutes.
-    message: `Too many authentication attempts from this IP. Please try again after ${RL_GENERAL_MIN} minutes.`,
+    message: { message: `Too many authentication attempts from this IP. Please try again after ${RL_GENERAL_MIN} minutes.` },
     standardHeaders: true,                                          // Reports rate limits with standard headers.
     legacyHeaders: false,                                           // Disable obsolete headers.
 });

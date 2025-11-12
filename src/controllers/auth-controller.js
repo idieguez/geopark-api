@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Environment variables for JWT.
-const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
+const { JWT_SECRET, JWT_EXPIRES_IN, LA_MAX_ATTEMPTS, LA_LOCK_TIME } = process.env;
 
 
 
@@ -49,6 +49,8 @@ exports.register = async function (req, res) {
             newsletter: newsletterParam,
             settings: { appearance: 'auto' },
             notes: notesParam,
+            loginAttempts: 0,
+            lockUntil: null,
             dateUserCreation: new Date(),
             dateLastUserModification: new Date(),
             dateLastPasswordModification: new Date()
@@ -114,14 +116,33 @@ exports.login = async function (req, res) {
         // Check if the email already exists.
         const existingUser = await User.findOne({ email: emailParam }).exec();
         if (!existingUser) {
-            return res.status(400).json({ message: `Invalid credentials.` });
+            return res.status(401).json({ message: `Invalid credentials.` });
+        }
+
+        // Check if the account is currently locked.
+        if (existingUser.lockUntil && existingUser.lockUntil > new Date()) {
+            return res.status(403).json({ message: `Account locked due to too many failed login attempts. Please try again later.` });
         }
 
         // Compare the passwords.
         const isMatch = await bcrypt.compare(passwordParam, existingUser.password);
+
+        // If the password is incorrect: update the lock counters and response.
         if (!isMatch) {
-            return res.status(400).json({ message: `Invalid credentials.` });
+            existingUser.loginAttempts += 1;
+
+            if (existingUser.loginAttempts >= LA_MAX_ATTEMPTS) {
+                existingUser.lockUntil = new Date(Date.now() + LA_LOCK_TIME * 60 * 1000);
+            }
+
+            await existingUser.save();
+            return res.status(401).json({ message: `Invalid credentials.` });
         }
+
+        // If the password is correct: reset the lock counters.
+        existingUser.loginAttempts = 0;
+        existingUser.lockUntil = null;
+        await existingUser.save();
 
         // Generate a JWT token.
         const token = jwt.sign(

@@ -37,6 +37,12 @@ exports.authMiddleware = async function(req, res, next) {
             return res.status(401).json({ message: `Invalid or expired token. Authorization denied.` });
         }
 
+        // Verify if the token was issued before a password change.
+        const tokenIssuedAt = decoded.iat * 1000;
+        if (user.dateLastPasswordModification > tokenIssuedAt) {
+            return res.status(401).json({ message: `Token is no longer valid due to a password change. Please log in again.` });
+        }
+
         // Add the user id to the request object.
         req.userId = decoded.userId;
         
