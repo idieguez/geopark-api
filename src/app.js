@@ -47,8 +47,6 @@ const authLimiter = rateLimit({
     legacyHeaders: false,                                           // Disable obsolete headers.
 });
 
-app.use(generalLimiter);
-
 
 
 
