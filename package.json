@@ -27,11 +27,20 @@
     "express-rate-limit": "7.5.0",
     "helmet": "8.1.0",
     "jsonwebtoken": "9.0.2",
-    "mongoose": "8.9.5",
     "zod": "4.1.12"
   },
   "devDependencies": {
     "jest": "30.2.0",
-    "nodemon": "3.1.9"
+    "mongodb-memory-server": "10.3.0",
+    "mongoose": "9.0.0",
+    "nodemon": "3.1.9",
+    "supertest": "7.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 30000,
+    "setupFiles": [
+      "<rootDir>/tests/setup-env.js"
+    ]
   }
 }
