@@ -10,8 +10,9 @@ const { validateCreateVehicle, validateGetVehicle, validateUpdateVehicle, valida
  * Router creation.
  */
 
-exports.router = express.Router();
-const router = exports.router;
+const router = express.Router();
+
+router.use(authMiddleware); // All routes require to be logged in.
 
 
 
@@ -20,8 +21,17 @@ const router = exports.router;
  * Routes for vehicles operations.
  */
 
-router.post('/', authMiddleware, validateCreateVehicle, createVehicle);
-router.get('/', authMiddleware, getVehicles);
-router.get('/:licensePlate', authMiddleware, validateGetVehicle, getVehicle);
-router.patch('/:licensePlate', authMiddleware, validateUpdateVehicle, updateVehicle);
-router.delete('/:licensePlate', authMiddleware, validateDeleteVehicle, deleteVehicle);
+router.post('/', validateCreateVehicle, createVehicle);
+router.get('/', getVehicles);
+router.get('/:licensePlate', validateGetVehicle, getVehicle);
+router.patch('/:licensePlate', validateUpdateVehicle, updateVehicle);
+router.delete('/:licensePlate', validateDeleteVehicle, deleteVehicle);
+
+
+
+
+/*
+ * Export of routers.
+ */
+
+module.exports = { router };

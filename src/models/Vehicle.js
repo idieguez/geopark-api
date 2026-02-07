@@ -18,7 +18,12 @@ exports.Vehicle = mongoose.model('Vehicle', new mongoose.Schema({
         longitude: { type: Number, default: null }
     },
     notes: { type: String, default: '' },
-    userId: { type: String, required: true },
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true ,
+        index: true
+    },
     dateVehicleCreation: { type: Date, required: true, default: Date.now },
     dateLastVehicleModification: { type: Date, required: true, default: Date.now },
     dateLastLocationModification: { type: Date, default: Date.now }

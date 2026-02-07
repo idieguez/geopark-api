@@ -13,7 +13,7 @@ exports.User = mongoose.model('User', new mongoose.Schema({
     surname: { type: String, required: true },
     secondSurname: { type: String, default: null },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }, // Encrypted password
+    password: { type: String, required: true, select: false }, // Encrypted password
     newsletter: { type: Boolean, required: true, default: false },
     settings: {
         appearance: { type: String, enum: ['auto', 'light', 'dark'], required: true, default: 'auto' }

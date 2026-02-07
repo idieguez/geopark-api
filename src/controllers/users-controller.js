@@ -1,5 +1,7 @@
 const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
+const { AppError } = require('../utils/app-error');
+const { catchAsync } = require('../utils/catch-async');
 
 
 
@@ -9,21 +11,21 @@ const bcrypt = require('bcrypt');
  * GET /api/users/
  */
 
-exports.getUser = async function (req, res) {
+exports.getUser = catchAsync(async (req, res, next) => {
 
-    try {
+    // Get parameters.
+    const userIdParam = req.userId; // The user id is obtained from the token (vía auth-middleware).
 
-        // Get parameters.
-        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
+    // Get user.
+    const user = await User.findOne({ _id: userIdParam }).exec();
+    if (!user) {
+        return next(new AppError(`User not found.`, 404));
+    }
 
-        // Get user.
-        const user = await User.findOne({ _id: userIdParam }).exec();
-        if (!user) {
-            return res.status(404).json({ message: `User not found.` });
-        }
-
-        // Return user.
-        res.status(200).json({
+    // Return user.
+    res.status(200).json({
+        status: 'success',
+        data: {
             _id: user._id,
             name: user.name,
             surname: user.surname,
@@ -35,17 +37,10 @@ exports.getUser = async function (req, res) {
             dateUserCreation: user.dateUserCreation,
             dateLastUserModification: user.dateLastUserModification,
             dateLastPasswordModification: user.dateLastPasswordModification
-        });
+        }
+    });
 
-    } catch (error) {
-
-        // Log error.
-        console.error({ message: `Error when searching for the user: ${error}` });
-        res.status(500).json({ message: `Error when searching for the user.` });
-
-    }
-
-};
+});
 
 
 
@@ -55,54 +50,54 @@ exports.getUser = async function (req, res) {
  * PATCH /api/users/
  */
 
-exports.updateUser = async function (req, res) {
+exports.updateUser = catchAsync(async (req, res, next) => {
 
-    try {
+    // Get parameters.
+    const userIdParam = req.userId; // The user id is obtained from the token (vía auth-middleware).
+    const userParam = req.body;
 
-        // Get parameters.
-        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
-        const userParam = req.body;
+    // Exclude _id, email and dates from updates.
+    if (userParam._id) {
+        return next(new AppError(`It is not allowed to update the user id.`, 400));
+    }
 
-        // Exclude _id, email and dates from updates.
-        if (userParam._id) {
-            return res.status(400).json({ message: `It is not allowed to update the user id.` });
-        }
+    if (userParam.email) {
+        return next(new AppError(`It is not allowed to update the user's email address.`, 400));
+    }
+    
+    if (userParam.dateUserCreation || userParam.dateLastUserModification || userParam.dateLastPasswordModification) {
+        return next(new AppError(`It is not allowed to update the dates.`, 400));
+    }
 
-        if (userParam.email) {
-            return res.status(400).json({ message: `It is not allowed to update the user's email address.` });
-        }
-        
-        if (userParam.dateUserCreation || userParam.dateLastUserModification || userParam.dateLastPasswordModification) {
-            return res.status(400).json({ message: `It is not allowed to update the dates.` });
-        }
+    // Check if the password is being updated.
+    if (userParam.password) {
+        userParam.password = await bcrypt.hash(userParam.password, 12);
+        userParam.dateLastPasswordModification = new Date();
+    }
 
-        // Check if the password is being updated.
-        if (userParam.password) {
-            userParam.password = await bcrypt.hash(userParam.password, 12);
-            userParam.dateLastPasswordModification = new Date();
-        }
+    // Dates update.
+    userParam.dateLastUserModification = new Date();
 
-        // Dates update.
-        userParam.dateLastUserModification = new Date();
+    // Get user.
+    const user1 = await User.findOne({ _id: userIdParam }).exec();
+    if (!user1) {
+        return next(new AppError(`User not found.`, 404));
+    }
 
-        // Get user.
-        const user1 = await User.findOne({ _id: userIdParam }).exec();
-        if (!user1) {
-            return res.status(404).json({ message: `User not found.` });
-        }
+    // Update user in the database.
+    const user2 = await User.findByIdAndUpdate(userIdParam, userParam, {
+        new: true, // Returns the updated document.
+        runValidators: true // Executes the validations defined in the schema.
+    });
 
-        // Update user in the database.
-        const user2 = await User.findByIdAndUpdate(userIdParam, userParam, {
-            new: true,                  // Returns the updated document.
-            runValidators: true         // Executes the validations defined in the schema.
-        });
+    if (!user2) {
+        return next(new AppError(`Error when updating the user.`, 404));
+    }
 
-        if (!user2) {
-            return res.status(404).json({ message: `Error when updating the user.` });
-        }
-
-        // Return user.
-        res.status(200).json({
+    // Return user.
+    res.status(200).json({
+        status: 'success',
+        data: {
             _id: user2._id,
             name: user2.name,
             surname: user2.surname,
@@ -114,17 +109,10 @@ exports.updateUser = async function (req, res) {
             dateUserCreation: user2.dateUserCreation,
             dateLastUserModification: user2.dateLastUserModification,
             dateLastPasswordModification: user2.dateLastPasswordModification
-        });
+        }
+    });
 
-    } catch (error) {
-
-        // Log error.
-        console.error({ message: `Error when updating the user: ${error}` });
-        res.status(500).json({ message: `Error when updating the user.` });
-
-    }
-
-};
+});
 
 
 
@@ -134,34 +122,24 @@ exports.updateUser = async function (req, res) {
  * DELETE /api/users/
  */
 
-exports.deleteUser = async function (req, res) {
+exports.deleteUser = catchAsync(async (req, res, next) => {
 
-    try {
+    // Get parameters.
+    const userIdParam = req.userId; // The user id is obtained from the token (vía auth-middleware).
 
-        // Get parameters.
-        const userIdParam = req.userId;             // The user id is obtained from the token (vía auth-middleware).
-
-        // Get user.
-        const user = await User.findOne({ _id: userIdParam }).exec();
-        if (!user) {
-            return res.status(404).json({ message: `User not found.` });
-        }
-
-        // Delete user from the database.
-        const result = await User.deleteOne({ _id: userIdParam }).exec();
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: `Error when deleting the user.` });
-        }
-        
-        // Respond.
-        res.status(200).json({ message: `User deleted successfully.` });
-
-    } catch (error) {
-
-        // Log error.
-        console.error({ message: `Error when searching for the user: ${error}` });
-        res.status(500).json({ message: `Error when searching for the user.` });
-
+    // Get user.
+    const user = await User.findOne({ _id: userIdParam }).exec();
+    if (!user) {
+        return next(new AppError(`User not found.`, 404));
     }
 
-};
+    // Delete user from the database.
+    const result = await User.deleteOne({ _id: userIdParam }).exec();
+    if (result.deletedCount === 0) {
+        return next(new AppError(`Error when deleting the user.`, 404));
+    }
+    
+    // Respond.
+    res.status(204).send(); // With no body.
+
+});

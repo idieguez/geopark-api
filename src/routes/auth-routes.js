@@ -9,8 +9,7 @@ const { validateRegister, validateLogin } = require('../middlewares/validations/
  * Router creation.
  */
 
-exports.router = express.Router();
-const router = exports.router;
+const router = express.Router();
 
 
 
@@ -19,5 +18,14 @@ const router = exports.router;
  * Routes for auth operations.
  */
 
-router.post('/register/', validateRegister, register);
-router.post('/login/', validateLogin, login);
+router.post('/register', validateRegister, register);
+router.post('/login', validateLogin, login);
+
+
+
+
+/*
+ * Export of routers.
+ */
+
+module.exports = { router };

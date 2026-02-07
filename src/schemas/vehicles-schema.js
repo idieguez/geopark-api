@@ -4,6 +4,18 @@ const { z } = require('zod');
 
 
 /*
+ * Reusable constants.
+ */
+
+const licensePlateValidation = z.string().trim()
+    .length(7, 'License plate must have exactly 7 characters')
+    .regex(/^\d{4}[a-zA-Z]{3}$/, 'Format must be 4 numbers followed by 3 letters (e.g., 1234ABC)')
+    .transform(s => s.toUpperCase());
+
+
+
+
+/*
  * Vehicle creation validation schema.
  */
 
@@ -12,11 +24,7 @@ exports.createVehicleSchema = z.object({
     body: z.object({
 
         // License plate.
-        licensePlate: z.string().trim()
-            .min(7, 'License plate must have 7 characters')
-            .max(7, 'License plate must have 7 characters')
-            .regex(/^\d{4}[a-zA-Z]{3}$/, 'License plate must be 4 numbers followed by 3 letters with no spaces in between (e.g., 1234ABC)')
-            .transform(s => s.toUpperCase()),
+        licensePlate: licensePlateValidation,
         
         // Type.
         type: z.enum(['car', 'motorbike'], {
@@ -58,11 +66,7 @@ exports.getVehicleSchema = z.object({
     params: z.object({
 
         // License plate.
-        licensePlate: z.string().trim()
-            .min(7, 'License plate must have 7 characters')
-            .max(7, 'License plate must have 7 characters')
-            .regex(/^\d{4}[a-zA-Z]{3}$/, 'License plate must be 4 numbers followed by 3 letters with no spaces in between (e.g., 1234ABC)')
-            .transform(s => s.toUpperCase())
+        licensePlate: licensePlateValidation
 
     }).strict()
 
@@ -81,11 +85,7 @@ exports.updateVehicleSchema = z.object({
     params: z.object({
 
         // License plate.
-        licensePlate: z.string().trim()
-            .min(7, 'License plate must have 7 characters')
-            .max(7, 'License plate must have 7 characters')
-            .regex(/^\d{4}[a-zA-Z]{3}$/, 'License plate must be 4 numbers followed by 3 letters with no spaces in between (e.g., 1234ABC)')
-            .transform(s => s.toUpperCase())
+        licensePlate: licensePlateValidation
 
     }).strict(),
 
@@ -127,6 +127,7 @@ exports.updateVehicleSchema = z.object({
 
         })
         .strict()
+        .nullable()
         .optional(),
         
         // Notes.
@@ -153,11 +154,7 @@ exports.deleteVehicleSchema = z.object({
     params: z.object({
 
         // License plate.
-        licensePlate: z.string().trim()
-            .min(7, 'License plate must have 7 characters')
-            .max(7, 'License plate must have 7 characters')
-            .regex(/^\d{4}[a-zA-Z]{3}$/, 'License plate must be 4 numbers followed by 3 letters with no spaces in between (e.g., 1234ABC)')
-            .transform(s => s.toUpperCase())
+        licensePlate: licensePlateValidation
 
     }).strict()
 

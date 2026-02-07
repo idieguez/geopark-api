@@ -10,8 +10,7 @@ const { validateUpdateUser } = require('../middlewares/validations/users-validat
  * Router creation.
  */
 
-exports.router = express.Router();
-const router = exports.router;
+const router = express.Router();
 
 
 
@@ -23,3 +22,12 @@ const router = exports.router;
 router.get('/', authMiddleware, getUser);
 router.patch('/', authMiddleware, validateUpdateUser, updateUser);
 router.delete('/', authMiddleware, deleteUser);
+
+
+
+
+/*
+ * Export of routers.
+ */
+
+module.exports = { router };

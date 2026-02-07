@@ -1,9 +1,7 @@
-require('dotenv').config({ path: '.env.development' });
+require('dotenv').config({ path: '.env' });
 const express = require('express');
 const { connectToDatabase, disconnectFromDatabase } = require('./database');
 const { app } = require('./app');
-
-// Environment variables for MongoDB connection.
 const { APP_PORT } = process.env;
 
 
@@ -41,5 +39,5 @@ const shutdown = function () {
 
 
 // Shutdown signals.
-process.on('SIGINT', shutdown);             // For interruptions (Ctrl+C).
-process.on('SIGTERM', shutdown);            // For termination signals.
+process.on('SIGINT', shutdown); // For interruptions (Ctrl+C).
+process.on('SIGTERM', shutdown); // For termination signals.
