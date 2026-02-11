@@ -78,8 +78,8 @@ exports.errorMiddleware = function(err, req, res, next) {
     // Development: send detailed error information.
     if (process.env.ENV === 'DEV') {
         
-        // Log error: message + stack.
-        console.error('Error:', err);
+        // Log error.
+        console.error({ message: `Error: ${err.message}`, details: err});
 
         // Send detailed error information.
         res.status(statusCode).json({
@@ -104,8 +104,8 @@ exports.errorMiddleware = function(err, req, res, next) {
         // Programming or other unknown error: don't leak error details.
         } else {
 
-            // Log error: message + stack.
-            console.error('Error:', err);
+            // Log error.
+            console.error({ message: `Error: ${err.message}`, details: err});
 
             // Send generic error message.
             res.status(500).json({

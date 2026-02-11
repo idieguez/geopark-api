@@ -20,7 +20,7 @@ exports.connectToDatabase = async function () {
 
     mongoose.connect(uri)
         .then(() => console.log({ message: `Database connected successfully.` }))
-        .catch(err => console.error({ message: `Database connection error: `, err }));
+        .catch(err => console.error({ message: `Database connection error: `, details: err }));
 
 };
 
@@ -35,6 +35,6 @@ exports.disconnectFromDatabase = async function () {
 
     mongoose.disconnect()
         .then(() => console.log({ message: `Database disconnected successfully.` }))
-        .catch(err => console.error({ message: `Database disconnection error: `, err }));
+        .catch(err => console.error({ message: `Database disconnection error: `, details: err }));
 
 };
