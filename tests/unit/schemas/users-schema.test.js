@@ -16,8 +16,8 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
             }
         };
 
-        const result = updateUserSchema.safeParse(input);                   // "safeParse" returns an object with { success: true/false, data/error }
-        expect(result.success).toBe(true);                                  // "expect" is the statement. If this is not "true", the test fails.
+        const result = updateUserSchema.safeParse(input); // "safeParse" returns an object with { success: true/false, data/error }
+        expect(result.success).toBe(true); // "expect" is the statement. If this is not "true", the test fails.
 
     });
 
@@ -45,7 +45,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
         const input = {
             body: {
                 settings: {
-                    appearance: 'blue-theme'                                // <--
+                    appearance: 'blue-theme' // <--
                 }
             }
         };
@@ -61,7 +61,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                email: 'luis@example.com'                                   // <--
+                email: 'luis@example.com' // <--
             }
         };
 
@@ -76,7 +76,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                password: 'Password123'                                     // <--
+                password: 'Password123' // <--
             }
         };
 
@@ -91,7 +91,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                password: 'Password 123!'                                   // <--
+                password: 'Password 123!' // <--
             }
         };
 
@@ -113,7 +113,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
                 email: 'israel@example.com',
                 password: 'Password123!',
                 newsletter: true,
-                isAdmin: true                                               // <--
+                isAdmin: true // <--
             }
         };
 

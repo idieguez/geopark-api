@@ -41,7 +41,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
                 password: 'Password123!'
             });
         
-        return loginResponse.body.token;
+        return loginResponse.body.data.token;
     };
 
 
@@ -64,8 +64,8 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
 
         // 2. Verify response.
         expect(response.status).toBe(201);
-        expect(response.body.licensePlate).toBe('1234ABC');
-        expect(response.body.brand).toBe('Mercedes-Benz');
+        expect(response.body.data.licensePlate).toBe('1234ABC');
+        expect(response.body.data.brand).toBe('Mercedes-Benz');
 
         // 3. Verify DB persistence.
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
@@ -94,8 +94,8 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(Array.isArray(response.body)).toBe(true);
-        expect(response.body.length).toBe(2);
+        expect(Array.isArray(response.body.data)).toBe(true);
+        expect(response.body.data.length).toBe(2);
 
     });
 
@@ -123,8 +123,8 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.licensePlate).toBe('1234ABC');
-        expect(response.body.model).toBe('Vito');
+        expect(response.body.data.licensePlate).toBe('1234ABC');
+        expect(response.body.data.model).toBe('Vito');
 
     });
 
@@ -155,7 +155,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.notes).toBe('For the whole family (updated notes).');
+        expect(response.body.data.notes).toBe('For the whole family (updated notes).');
 
         // 3. Verify DB.
         const updatedVehicle = await Vehicle.findOne({ licensePlate: '1234ABC' });
@@ -185,8 +185,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             .set('Authorization', `Bearer ${token}`);
 
         // 2. Verify response.
-        expect(response.status).toBe(200);
-        expect(response.body.message).toContain('deleted successfully');
+        expect(response.status).toBe(204);
 
         // 3. Verify DB.
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
@@ -262,8 +261,8 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             .patch('/api/vehicles/1234FIX')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                licensePlate: '9999HACK',                                   // Forbidden.
-                userId: '507f1f77bcf86cd799439011'                          // Forbidden (Random ID).
+                licensePlate: '9999HACK', // Forbidden.
+                userId: '507f1f77bcf86cd799439011' // Forbidden (Random ID).
             });
 
         // 2. Verify response (expect 400 due to Zod "Unrecognized key" or specific validation).
@@ -271,8 +270,8 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
 
         // 3. Verify DB integrity (critical).
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234FIX' });
-        expect(vehicleInDb).toBeTruthy();                                   // License plate didn't change.
-        expect(vehicleInDb.userId.toString()).toBe(user._id.toString());    // Owner didn't change.
+        expect(vehicleInDb).toBeTruthy(); // License plate didn't change.
+        expect(vehicleInDb.userId.toString()).toBe(user._id.toString()); // Owner didn't change.
 
     });
 

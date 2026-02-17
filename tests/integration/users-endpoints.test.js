@@ -23,7 +23,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         // 1. Create user.
         const hashedPassword = await bcrypt.hash('Password123!', 10);
-        const pastDate = new Date(Date.now() - 60000);                  // 1 minute ago.
+        const pastDate = new Date(Date.now() - 60000); // 1 minute ago.
 
         await User.create({
             name: 'Israel',
@@ -42,7 +42,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 password: 'Password123!'
             });
         
-        return loginResponse.body.token;
+        return loginResponse.body.data.token;
     };
 
 
@@ -54,13 +54,13 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         // 1. Request profile.
         const response = await request(app)
             .get('/api/users/')
-            .set('Authorization', `Bearer ${token}`);                   // Auth header.
+            .set('Authorization', `Bearer ${token}`); // Auth header.
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.email).toBe('israel@example.com');
-        expect(response.body.name).toBe('Israel');
-        expect(response.body).not.toHaveProperty('password');
+        expect(response.body.data.email).toBe('israel@example.com');
+        expect(response.body.data.name).toBe('Israel');
+        expect(response.body.data).not.toHaveProperty('password');
 
     });
 
@@ -81,8 +81,8 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.name).toBe('Israel New');
-        expect(response.body.surname).toBe('Diéguez New');
+        expect(response.body.data.name).toBe('Israel New');
+        expect(response.body.data.surname).toBe('Diéguez New');
 
         // 3. Verify DB persistence.
         const userInDb = await User.findOne({ email: 'israel@example.com' });
@@ -101,12 +101,13 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                email: 'luis@example.com'                               // Forbidden.
+                email: 'luis@example.com' // Forbidden.
             });
 
         // 2. Verify response.
         expect(response.status).toBe(400);
-        expect(response.body.message).toBe('Incorrect data validation.');
+        expect(response.body.message).toContain('Unrecognized key');
+        expect(response.body.message).toContain('email');
 
     });
 
@@ -122,8 +123,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             .set('Authorization', `Bearer ${token}`);
 
         // 2. Verify response.
-        expect(response.status).toBe(200);
-        expect(response.body.message).toContain('deleted successfully');
+        expect(response.status).toBe(204);
 
         // 3. Verify DB.
         const userInDb = await User.findOne({ email: 'israel@example.com' });
@@ -136,7 +136,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
     test('GET /api/users/ - It should return 401 if no token is provided.', async () => {
 
         const response = await request(app)
-            .get('/api/users/');                                      // No auth header.
+            .get('/api/users/'); // No auth header.
 
         expect(response.status).toBe(401);
 

@@ -12,9 +12,9 @@ let mongo = null;
 
 exports.connect = async () => {
 
-    mongo = await MongoMemoryServer.create();       // Create the in-memory server instance.
-    const uri = mongo.getUri();                     // Get the connection URI.
-    await mongoose.connect(uri);                    // Connect Mongoose to this URI.
+    mongo = await MongoMemoryServer.create(); // Create the in-memory server instance.
+    const uri = mongo.getUri(); // Get the connection URI.
+    await mongoose.connect(uri); // Connect Mongoose to this URI.
 
 };
 

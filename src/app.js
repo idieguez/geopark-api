@@ -28,7 +28,7 @@ if (ENV === 'DEV') {
     app.use(morgan('combined'));
 }
 
-const corsIsDev = ENV === 'DEV';
+const corsAllowNoOrigin = ENV === 'DEV' || ENV === 'TEST';
 const corsWhitelist = CORS_ORIGIN.split(',').map(origin => origin.trim());
 
 const corsOptions = {
@@ -41,7 +41,7 @@ const corsOptions = {
         }
 
         // Case B: The request has no origin (e.g. Postman). If we are in DEV, we allow it; otherwise, we block it.
-        if (!origin && corsIsDev) {
+        if (!origin && corsAllowNoOrigin) {
             return callback(null, true);
         }
 
@@ -57,7 +57,7 @@ const corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options(/.* /, cors(corsOptions));
 
 
 
@@ -114,7 +114,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', generalLimiter, usersRoutes);
 app.use('/api/vehicles', generalLimiter, vehiclesRoutes);
 
-app.all('*', (req, res, next) => { // Unhandled routes (404).
+app.all(/.* /, (req, res, next) => { // Unhandled routes (404).
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // Passing an argument to next() automatically skips to the error handling middleware.
 });
 

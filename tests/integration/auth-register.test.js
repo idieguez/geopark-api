@@ -36,15 +36,15 @@ describe('Integration test suite for POST /api/auth/register.', () => {
 
         // 2. Verify HTTP response.
         expect(response.status).toBe(201);
-        expect(response.body.email).toBe('israel@example.com');
-        expect(response.body).not.toHaveProperty('password');               // Security check: do not return password.
+        expect(response.body.data.email).toBe('israel@example.com');
+        expect(response.body.data).not.toHaveProperty('password'); // Security check: do not return password.
 
         // 3. Verify Database.
-        const userInDb = await User.findOne({ email: 'israel@example.com' });
-        expect(userInDb).toBeTruthy();                                      // It must exist.
+        const userInDb = await User.findOne({ email: 'israel@example.com' }).select('+password');
+        expect(userInDb).toBeTruthy(); // It must exist.
         expect(userInDb.name).toBe('Israel');
-        expect(userInDb.password).not.toBe('Password123!');                 // It must be hashed.
-        expect(userInDb.password).toMatch(/^\$2b\$/);                       // Bcrypt hashes start with $2b$.
+        expect(userInDb.password).not.toBe('Password123!'); // It must be hashed.
+        expect(userInDb.password).toMatch(/^\$2b\$/); // Bcrypt hashes start with $2b$.
 
     });
 
@@ -88,7 +88,7 @@ describe('Integration test suite for POST /api/auth/register.', () => {
             .send({
                 name: 'Israel',
                 surname: 'Diéguez',
-                email: 'israel-no-tiene-email',                             // <--
+                email: 'israel-no-tiene-email', // <--
                 password: 'Password123!',
                 newsletter: true
             });

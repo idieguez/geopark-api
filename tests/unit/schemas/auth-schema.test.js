@@ -20,8 +20,8 @@ describe('Test suite for auth-schema - registerSchema.', () => {
             }
         };
 
-        const result = registerSchema.safeParse(input);                     // "safeParse" returns an object with { success: true/false, data/error }
-        expect(result.success).toBe(true);                                  // "expect" is the statement. If this is not "true", the test fails.
+        const result = registerSchema.safeParse(input); // "safeParse" returns an object with { success: true/false, data/error }
+        expect(result.success).toBe(true); // "expect" is the statement. If this is not "true", the test fails.
 
     });
 
@@ -33,7 +33,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
             body: {
                 name: 'Israel',
                 surname: 'Diéguez',
-                email: 'israel-no-tiene-email',                             // <--
+                email: 'israel-no-tiene-email', // <--
                 password: 'Password123!',
                 newsletter: true
             }
@@ -53,7 +53,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 name: 'Israel',
                 surname: 'Diéguez',
                 email: 'israel@example.com',
-                password: '123',                                            // <--
+                password: '123', // <--
                 newsletter: true
             }
         };
@@ -71,7 +71,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
             body: {
                 name: 'Israel',
                 surname: 'Diéguez',
-                email: 'ISRAEL@example.com',                                // <--
+                email: 'ISRAEL@example.com', // <--
                 password: 'Password123!',
                 newsletter: true
             }
@@ -79,7 +79,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const result = registerSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.body.email).toBe('israel@example.com');          // Verify the transformation.
+        expect(result.data.body.email).toBe('israel@example.com'); // Verify the transformation.
 
     });
 
@@ -94,7 +94,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 email: 'israel@example.com',
                 password: 'Password123!',
                 newsletter: true,
-                secondSurname: ""                                           // <--
+                secondSurname: "" // <--
             }
         };
 
@@ -110,7 +110,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel2',                                            // <--
+                name: 'Israel2', // <--
                 surname: 'Diéguez',
                 email: 'israel@example.com',
                 password: 'Password123!',
@@ -130,7 +130,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: '  Israel  ',                                         // <--
+                name: '  Israel  ', // <--
                 surname: 'Diéguez',
                 email: 'israel@example.com',
                 password: 'Password123!',
@@ -153,7 +153,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 name: 'Israel',
                 surname: 'Diéguez',
                 email: 'israel@example.com',
-                password: 'Password123',                                    // <--
+                password: 'Password123', // <--
                 newsletter: true
             }
         };
@@ -172,7 +172,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 name: 'Israel',
                 surname: 'Diéguez',
                 email: 'israel@example.com',
-                password: 'Password 123!',                                  // <--
+                password: 'Password 123!', // <--
                 newsletter: true
             }
         };
@@ -193,7 +193,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 email: 'israel@example.com',
                 password: 'Password123!',
                 newsletter: true,
-                notes: ""                                                   // <--
+                notes: "" // <--
             }
         };
 
@@ -213,7 +213,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 surname: 'Diéguez',
                 email: 'israel@example.com',
                 password: 'Password123!',
-                newsletter: "true"                                          // <--
+                newsletter: "true" // <--
             }
         };
 
@@ -235,7 +235,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
                 email: 'israel@example.com',
                 password: 'Password123!',
                 newsletter: true,
-                isAdmin: true                                               // <--
+                isAdmin: true // <--
             }
         };
 
@@ -273,12 +273,12 @@ describe('Test suite for auth-schema - registerSchema.', () => {
     // Case 14: character limit (max length).
     test('It should fail if the name exceeds 50 characters.', () => {
 
-        // const veryLongName = 'a'.repeat(51);                                                // It generates 51 characters 'a'.
-        const veryLongName = 'abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz';       // It generates a very long name (greater than 50 characters).
+        // const veryLongName = 'a'.repeat(51); // It generates 51 characters 'a'.
+        const veryLongName = 'abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvwxyz'; // It generates a very long name (greater than 50 characters).
         
         const input = {
             body: {
-                name: veryLongName,                                         // <--
+                name: veryLongName, // <--
                 surname: 'Diéguez',
                 email: 'israel@example.com',
                 password: 'Password123!',
@@ -320,7 +320,7 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'israel-no-tiene-email',                             // <--
+                email: 'israel-no-tiene-email', // <--
                 password: 'Password123!'
             }
         };
@@ -336,14 +336,14 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'ISRAEL@example.com',                                // <--
+                email: 'ISRAEL@example.com', // <--
                 password: 'Password123!'
             }
         };
 
         const result = loginSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.body.email).toBe('israel@example.com');          // Verify the transformation.
+        expect(result.data.body.email).toBe('israel@example.com'); // Verify the transformation.
 
     });
 
@@ -357,7 +357,7 @@ describe('Test suite for auth-schema - loginSchema.', () => {
             body: {
                 email: 'israel@example.com',
                 password: 'Password123!',
-                isAdmin: true                                               // <--
+                isAdmin: true // <--
             }
         };
 

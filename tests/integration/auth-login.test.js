@@ -41,13 +41,13 @@ describe('Integration test suite for POST /api/auth/login.', () => {
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('token');
-        expect(response.body.email).toBe('israel@example.com');
-        expect(response.body.name).toBe('Israel');
+        expect(response.body.data).toHaveProperty('token');
+        expect(response.body.data.email).toBe('israel@example.com');
+        expect(response.body.data.name).toBe('Israel');
 
         // Optional: Verify token format (basic check).
-        expect(typeof response.body.token).toBe('string');
-        expect(response.body.token.split('.').length).toBe(3);              // JWT has 3 parts.
+        expect(typeof response.body.data.token).toBe('string');
+        expect(response.body.data.token.split('.').length).toBe(3); // JWT has 3 parts.
 
     });
 
@@ -70,7 +70,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
             .post('/api/auth/login')
             .send({
                 email: 'israel@example.com',
-                password: 'WrongPassword!'                                  // <--
+                password: 'WrongPassword!' // <--
             });
 
         expect(response.status).toBe(401);
@@ -87,7 +87,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         const response = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'incorrect@example.com',                             // <--
+                email: 'incorrect@example.com', // <--
                 password: 'Password123!'
             });
 

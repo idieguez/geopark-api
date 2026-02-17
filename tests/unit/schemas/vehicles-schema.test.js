@@ -12,7 +12,7 @@ describe('Test suite for vehicles-schema - createVehicleSchema.', () => {
 
         const input = {
             body: {
-                licensePlate: '1234abc',                                    // Lowercase input to test transformation.
+                licensePlate: '1234abc', // Lowercase input to test transformation.
                 type: 'car',
                 brand: 'Mercedes-Benz',
                 model: 'Vito',
@@ -22,7 +22,7 @@ describe('Test suite for vehicles-schema - createVehicleSchema.', () => {
 
         const result = createVehicleSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.body.licensePlate).toBe('1234ABC');              // Check uppercase transform.
+        expect(result.data.body.licensePlate).toBe('1234ABC'); // Check uppercase transform.
 
     });
 
@@ -55,7 +55,7 @@ describe('Test suite for vehicles-schema - createVehicleSchema.', () => {
         const input = {
             body: {
                 licensePlate: '1234ABC',
-                type: 'truck',                                              // <--
+                type: 'truck', // <--
                 brand: 'Mercedes-Benz',
                 model: 'Vito'
             }
@@ -74,7 +74,7 @@ describe('Test suite for vehicles-schema - createVehicleSchema.', () => {
             body: {
                 licensePlate: '1234ABC',
                 type: 'car',
-                brand: '',                                                  // <--
+                brand: '', // <--
                 model: 'Vito'
             }
         };
@@ -93,7 +93,7 @@ describe('Test suite for vehicles-schema - createVehicleSchema.', () => {
                 licensePlate: '1234ABC',
                 type: 'car',
                 brand: 'Mercedes-Benz',
-                model: ''                                                   // <--
+                model: '' // <--
             }
         };
 
@@ -115,13 +115,13 @@ describe('Test suite for vehicles-schema - getVehicleSchema.', () => {
 
         const input = {
             params: {
-                licensePlate: '1234abc'                                     // Lowercase.
+                licensePlate: '1234abc' // Lowercase.
             }
         };
         
         const result = getVehicleSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.params.licensePlate).toBe('1234ABC');            // Uppercase.
+        expect(result.data.params.licensePlate).toBe('1234ABC'); // Uppercase.
 
     });
 
@@ -193,8 +193,8 @@ describe('Test suite for vehicles-schema - updateVehicleSchema.', () => {
             },
             body: {
                 location: {
-                    latitude: 100,                                          // Max is 90.
-                    longitude: -200                                         // Min is -180.
+                    latitude: 100, // Max is 90.
+                    longitude: -200 // Min is -180.
                 }
             }
         };
@@ -287,7 +287,7 @@ describe('Test suite for vehicles-schema - deleteVehicleSchema.', () => {
         const input = {
             params: {
                 licensePlate: '1234ABC',
-                id: '123'                                                   // <--
+                id: '123' // <--
             }
         };
 
