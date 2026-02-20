@@ -12,9 +12,15 @@
 
 ## Descripción
 
-"geopark-api" es un proyecto que forma parte de "Geopark", una aplicación web que permite a sus usuarios almacenar la ubicación de sus vehículos cuando estos son aparcados haciendo uso de la geolocalización de sus dispositivos móviles. Posteriormente, esta posición almacenada puede ser consultada o, incluso, enviada a una tercera persona.
+**geopark-api** es el servicio backend central de **Geopark**, una aplicación web diseñada para que los usuarios puedan registrar, consultar y compartir la ubicación exacta de sus vehículos aparcados mediante la geolocalización de sus dispositivos móviles.
 
-"geopark-api" constituye la columna vertebral del backend de la aplicación, diseñado meticulosamente conforme a las mejores prácticas de desarrollo de REST API.
+Construida sobre Node.js y Express, esta REST API ha sido desarrollada priorizando la seguridad, el rendimiento y las exigencias del software moderno. Entre sus características arquitectónicas destacan:
+
+- **Seguridad robusta**: autenticación state-less mediante JWT, encriptación de contraseñas con bcrypt, y protección activa contra vulnerabilidades web usando Helmet, CORS estricto y Rate Limiting.
+
+- **Fiabilidad y tipado**: validación estricta de todas las entradas (payloads) mediante esquemas de Zod, acompañada de un middleware global para el manejo unificado de errores (JSend).
+
+- **Calidad garantizada**: lógica de negocio respaldada por una exhaustiva batería de más de 60 pruebas automatizadas (unitarias y de integración) utilizando Jest, Supertest y bases de datos en memoria para asegurar cero regresiones.
 
 
 
