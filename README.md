@@ -1,6 +1,15 @@
 # geopark-api
 
 
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853D?style=flat-square&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-5.x-404D59?style=flat-square&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Ready-4EA94B?style=flat-square&logo=mongodb&logoColor=white)
+![Jest Tests](https://img.shields.io/badge/Tests-60%20Passed-brightgreen?style=flat-square&logo=jest)
+![License](https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square)
+
+
+
+
 ## Descripción
 
 "geopark-api" es un proyecto que forma parte de "Geopark", una aplicación web que permite a sus usuarios almacenar la ubicación de sus vehículos cuando estos son aparcados haciendo uso de la geolocalización de sus dispositivos móviles. Posteriormente, esta posición almacenada puede ser consultada o, incluso, enviada a una tercera persona.
@@ -13,9 +22,12 @@
 ## Tabla de Contenidos
 
 - [Tecnologías](#tecnologías)
+- [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
 - [Uso](#uso)
+- [Formato de Respuestas](#formato-de-respuestas)
 - [Endpoints](#endpoints)
+- [Tests](#tests)
 - [Licencia](#licencia)
 - [Contacto](#contacto)
 
@@ -24,15 +36,39 @@
 
 ## Tecnologías
 
-Este proyecto utiliza las siguientes tecnologías y dependencias:
+Este proyecto utiliza las siguientes tecnologías:
 
 - Node.js
 - Express
-- Express Rate Limit
-- Mongoose
-- Bcrypt
+
+Adicionalmente, se han empleado las siguientes dependencias principales:
+
+- bcrypt
+- cors
 - dotenv
+- express-rate-limit
+- helmet
+- jest (dev)
 - jsonwebtoken
+- mongodb-memory-server (dev)
+- mongoose (dev)
+- morgan
+- nodemon (dev)
+- supertest (dev)
+- zod
+
+Como ya se ha podido inferir por las dependencias, la base de datos usada para persistir es MongoDB.
+
+
+
+
+## Requisitos Previos
+
+Antes de instalar el proyecto, asegúrate de tener instalado en tu sistema:
+
+- **Node.js**: versión 22 o superior.
+- **Git**: para clonar el repositorio.
+- **MongoDB**: una instancia local en ejecución (puerto por defecto 27017).
 
 
 
@@ -42,27 +78,23 @@ Este proyecto utiliza las siguientes tecnologías y dependencias:
 Para instalar y ejecutar este proyecto localmente, sigue estos pasos:
 
 1. Clona el repositorio:
+
     ```bash
     git clone https://github.com/idieguez/geopark-api.git
     ```
-2. Navega al directorio del proyecto:
+
+2. Navega al directorio del proyecto y ejecuta la instalación de dependencias:
+
     ```bash
     cd geopark-api
-    ```
-3. Instala las dependencias:
-    ```bash
     npm install
     ```
-4. Inicia el servidor en modo normal:
-    ```bash
-    npm run start
-    ```
-    O hazlo en modo desarrollo:
-    ```bash
-    npm run dev
-    ```
 
-Es necesario que se tenga previamente instalado y configurado Node.js, Git y MongoDB. Puede que también sea necesaria alguna configuración adicional.
+3. **Variables de entorno**. *Nota:* para facilitar el despliegue en entornos de desarrollo y evaluación académica, el archivo `.env` se ha incluido directamente en el repositorio. No es necesaria ninguna configuración adicional de claves secretas, CORS o puertos para levantar el proyecto.
+
+4. Inicia el servidor:
+    - Modo producción: `npm run start`
+    - Modo desarrollo (con hot-reload): `npm run dev`
 
 
 
@@ -72,84 +104,82 @@ Es necesario que se tenga previamente instalado y configurado Node.js, Git y Mon
 Para utilizar la API, realiza solicitudes HTTP a los endpoints disponibles. A continuación se muestra un ejemplo de cómo obtener información sobre un vehículo específico:
 
 ```bash
-curl --location 'http://localhost:3000/api/vehicles/2380MBF' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzkzODE2MDVhZmE0NjFiNGIwYWJlMjciLCJpYXQiOjE3Mzc3MjAxNzIsImV4cCI6MTczNzgwNjU3Mn0.354X9zF4YYwxGf1eIImm7CCsWnc1_7kgM3Ekji_hef8'
+curl --location 'http://localhost:3001/api/vehicles/1234ABC' --header 'Authorization: Bearer <token>'
 ```
+
+
+
+
+## Formato de Respuestas
+
+La API sigue un formato de respuesta estructurado para facilitar su consumo desde aplicaciones cliente.
+
+**Respuesta exitosa (200 OK / 201 Created)**:
+
+```json
+{
+    "status": "success",
+    "data": { ... }
+}
+```
+
+**Respuesta de error estándar (entorno de producción)**:
+
+```json
+{
+    "status": "error",
+    "message": "Descripción detallada del error."
+}
+```
+
+*Nota: al ejecutar la API en entorno de desarrollo (`ENV='DEV'`), las respuestas de error pueden incluir atributos adicionales (como `details` o la traza del error) orientados exclusivamente a la depuración.*
+
 
 
 
 ## Endpoints
 
+A continuación se detalla el contrato de la API. Las rutas marcadas con el candado (🔒) requieren que se envíe el token JWT en la cabecera `Authorization: Bearer <token>`.
 
-### Registro de un usuario
+| Método | Endpoint | Descripción | Auth |
+| :--- | :--- | :--- | :---: |
+| `POST` | `/api/auth/register/` | Crea un nuevo usuario. | ❌ |
+| `POST` | `/api/auth/login/` | Inicia la sesión de un usuario y devuelve el Token JWT. | ❌ |
+| `GET` | `/api/users/` | Obtiene los datos del usuario autenticado. | 🔒 |
+| `PATCH` | `/api/users/` | Modifica los datos permitidos del usuario. | 🔒 |
+| `DELETE`| `/api/users/` | Elimina la cuenta del usuario. | 🔒 |
+| `POST` | `/api/vehicles/` | Crea un nuevo vehículo asociado al usuario. | 🔒 |
+| `GET` | `/api/vehicles/` | Obtiene el listado de todos los vehículos del usuario. | 🔒 |
+| `GET` | `/api/vehicles/{licensePlate}`| Obtiene los detalles de un vehículo específico. | 🔒 |
+| `PATCH` | `/api/vehicles/{licensePlate}`| Modifica los datos (ej. notas, localización) de un vehículo. | 🔒 |
+| `DELETE`| `/api/vehicles/{licensePlate}`| Elimina un vehículo específico del usuario. | 🔒 |
 
-```http
-POST /api/auth/register/
-```
-Crea un nuevo usuario. Requiere la información del usuario en formato JSON en el body.
 
-### Inicio de sesión de un usuario
 
-```http
-POST /api/auth/login/
-```
-Inicia la sesión de un usuario existente. Requiere las credenciales del usuario en formato JSON en el body.
 
-### Consulta de datos de un usuario
+## Tests
 
-```http
-GET /api/users/
-```
-Obtiene los datos de un usuario. Requiere autenticación.
+La API cuenta con una batería completa de pruebas automatizadas construida con **Jest** y **Supertest**, garantizando la estabilidad del sistema y el cumplimiento de las reglas de negocio. Se utiliza `mongodb-memory-server` para ejecutar pruebas de integración rápidas y aisladas sin afectar a la base de datos de desarrollo.
 
-### Modificación de datos de un usuario
+Puedes ejecutar las pruebas utilizando los siguientes scripts preconfigurados:
 
-```http
-PATCH /api/users/
-```
-Modifica los datos de un usuario. Requiere la información del usuario a modificar en formato JSON en el body. Requiere autenticación.
+- **Tests Unitarios**: validan esquemas (Zod) y lógica pura.
 
-### Eliminación de un usuario
+    ```bash
+    npm run test:unit
+    ```
 
-```http
-DELETE /api/users/
-```
-Elimina un usuario. Requiere autenticación.
+- **Tests de Integración**: validan el flujo completo (Controlador > Middleware > Base de Datos).
 
-### Creación de un vehículo
+    ```bash
+    npm run test:integration
+    ```
 
-```http
-POST /api/vehicles/
-```
-Crea un nuevo vehículo. Requiere la información del vehículo en formato JSON en el body. Requiere autenticación.
+- **Batería completa (Full Suite)**: ejecuta ambas fases de manera secuencial.
 
-### Consulta de datos de todos los vehículos de un usuario
-
-```http
-GET /api/vehicles/
-```
-Obtiene los datos de todos los vehículos de un usuario. Requiere autenticación.
-
-### Consulta de datos del vehículo de un usuario
-
-```http
-GET /api/vehicles/{{licensePlate}}
-```
-Obtiene los datos del vehículo especificado de un usuario. Requiere autenticación.
-
-### Modificación de datos del vehículo de un usuario
-
-```http
-PATCH /api/vehicles/{{licensePlate}}
-```
-Modifica los datos del vehículo especificado de un usuario. Requiere la información del vehículo a modificar en formato JSON en el body. Requiere autenticación.
-
-### Eliminación del vehículo de un usuario
-
-```http
-DELETE /api/vehicles/{{licensePlate}}
-```
-Elimina el vehículo especificado de un usuario. Requiere autenticación.
+    ```bash
+    npm run test:full
+    ```
 
 
 
@@ -164,8 +194,7 @@ Este proyecto está licenciado bajo la Licencia AGPL-3.0. Consulta el archivo [L
 ## Contacto
 
 Para cualquier consulta o sugerencia, puedes contactarnos a través de:
+
 - Correo electrónico: john@example.com
 - GitHub: [idieguez](https://github.com/idieguez)
-
-
 
