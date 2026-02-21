@@ -24,9 +24,9 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         // Pre-step: Create a user in the DB.
         const hashedPassword = await bcrypt.hash('Password123!', 10);
         await User.create({
-            name: 'Israel',
-            surname: 'Diéguez',
-            email: 'israel@example.com',
+            name: 'John',
+            surname: 'Doe',
+            email: 'john@example.com',
             password: hashedPassword,
             newsletter: true
         });
@@ -35,15 +35,15 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         const response = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'Password123!'
             });
 
         // 2. Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data).toHaveProperty('token');
-        expect(response.body.data.email).toBe('israel@example.com');
-        expect(response.body.data.name).toBe('Israel');
+        expect(response.body.data.email).toBe('john@example.com');
+        expect(response.body.data.name).toBe('John');
 
         // Optional: Verify token format (basic check).
         expect(typeof response.body.data.token).toBe('string');
@@ -58,9 +58,9 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         // Pre-step: Create a user in the DB.
         const hashedPassword = await bcrypt.hash('Password123!', 10);
         await User.create({
-            name: 'Israel',
-            surname: 'Diéguez',
-            email: 'israel@example.com',
+            name: 'John',
+            surname: 'Doe',
+            email: 'john@example.com',
             password: hashedPassword,
             newsletter: true
         });
@@ -69,7 +69,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         const response = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'WrongPassword!' // <--
             });
 

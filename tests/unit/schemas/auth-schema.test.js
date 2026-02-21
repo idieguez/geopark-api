@@ -12,9 +12,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true
             }
@@ -31,9 +31,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel-no-tiene-email', // <--
+                name: 'John',
+                surname: 'Doe',
+                email: 'john-no-tiene-email', // <--
                 password: 'Password123!',
                 newsletter: true
             }
@@ -50,9 +50,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: '123', // <--
                 newsletter: true
             }
@@ -69,9 +69,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'ISRAEL@example.com', // <--
+                name: 'John',
+                surname: 'Doe',
+                email: 'JOHN@example.com', // <--
                 password: 'Password123!',
                 newsletter: true
             }
@@ -79,7 +79,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const result = registerSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.body.email).toBe('israel@example.com'); // Verify the transformation.
+        expect(result.data.body.email).toBe('john@example.com'); // Verify the transformation.
 
     });
 
@@ -89,9 +89,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true,
                 secondSurname: "" // <--
@@ -110,9 +110,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel2', // <--
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John2', // <--
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true
             }
@@ -130,9 +130,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: '  Israel  ', // <--
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: '  John  ', // <--
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true
             }
@@ -140,7 +140,7 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const result = registerSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.body.name).toBe('Israel');
+        expect(result.data.body.name).toBe('John');
 
     });
 
@@ -150,9 +150,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123', // <--
                 newsletter: true
             }
@@ -169,9 +169,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password 123!', // <--
                 newsletter: true
             }
@@ -188,9 +188,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true,
                 notes: "" // <--
@@ -209,9 +209,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: "true" // <--
             }
@@ -230,9 +230,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true,
                 isAdmin: true // <--
@@ -253,9 +253,9 @@ describe('Test suite for auth-schema - registerSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true
                 // secondSurname and notes are intentionally missing.
@@ -279,8 +279,8 @@ describe('Test suite for auth-schema - registerSchema.', () => {
         const input = {
             body: {
                 name: veryLongName, // <--
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true
             }
@@ -304,7 +304,7 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'Password123!'
             }
         };
@@ -320,7 +320,7 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'israel-no-tiene-email', // <--
+                email: 'john-no-tiene-email', // <--
                 password: 'Password123!'
             }
         };
@@ -336,14 +336,14 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'ISRAEL@example.com', // <--
+                email: 'JOHN@example.com', // <--
                 password: 'Password123!'
             }
         };
 
         const result = loginSchema.safeParse(input);
         expect(result.success).toBe(true);
-        expect(result.data.body.email).toBe('israel@example.com'); // Verify the transformation.
+        expect(result.data.body.email).toBe('john@example.com'); // Verify the transformation.
 
     });
 
@@ -355,7 +355,7 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'Password123!',
                 isAdmin: true // <--
             }
@@ -372,7 +372,7 @@ describe('Test suite for auth-schema - loginSchema.', () => {
 
         const input = {
             body: {
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'P123!'
             }
         };

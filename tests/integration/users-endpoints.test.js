@@ -26,9 +26,9 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         const pastDate = new Date(Date.now() - 60000); // 1 minute ago.
 
         await User.create({
-            name: 'Israel',
-            surname: 'Diéguez',
-            email: 'israel@example.com',
+            name: 'John',
+            surname: 'Doe',
+            email: 'john@example.com',
             password: hashedPassword,
             newsletter: true,
             dateLastPasswordModification: pastDate
@@ -38,7 +38,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         const loginResponse = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'Password123!'
             });
         
@@ -58,8 +58,8 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.data.email).toBe('israel@example.com');
-        expect(response.body.data.name).toBe('Israel');
+        expect(response.body.data.email).toBe('john@example.com');
+        expect(response.body.data.name).toBe('John');
         expect(response.body.data).not.toHaveProperty('password');
 
     });
@@ -75,18 +75,18 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                name: 'Israel New',
-                surname: 'Diéguez New'
+                name: 'John New',
+                surname: 'Doe New'
             });
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.data.name).toBe('Israel New');
-        expect(response.body.data.surname).toBe('Diéguez New');
+        expect(response.body.data.name).toBe('John New');
+        expect(response.body.data.surname).toBe('Doe New');
 
         // 3. Verify DB persistence.
-        const userInDb = await User.findOne({ email: 'israel@example.com' });
-        expect(userInDb.name).toBe('Israel New');
+        const userInDb = await User.findOne({ email: 'john@example.com' });
+        expect(userInDb.name).toBe('John New');
 
     });
 
@@ -126,7 +126,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         expect(response.status).toBe(204);
 
         // 3. Verify DB.
-        const userInDb = await User.findOne({ email: 'israel@example.com' });
+        const userInDb = await User.findOne({ email: 'john@example.com' });
         expect(userInDb).toBeNull();
 
     });

@@ -26,9 +26,9 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const pastDate = new Date(Date.now() - 60000);
 
         await User.create({
-            name: 'Israel',
-            surname: 'Diéguez',
-            email: 'israel@example.com',
+            name: 'John',
+            surname: 'Doe',
+            email: 'john@example.com',
             password: hashedPassword,
             newsletter: true,
             dateLastPasswordModification: pastDate
@@ -37,7 +37,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const loginResponse = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'Password123!'
             });
         
@@ -79,7 +79,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
     test('GET /api/vehicles/ - It should return a list of user vehicles.', async () => {
 
         const token = await createAndLoginUser();
-        const user = await User.findOne({ email: 'israel@example.com' });
+        const user = await User.findOne({ email: 'john@example.com' });
 
         // Pre-step: Create two vehicles directly in DB.
         await Vehicle.create([
@@ -104,7 +104,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
     test('GET /api/vehicles/:licensePlate - It should return the vehicle details.', async () => {
 
         const token = await createAndLoginUser();
-        const user = await User.findOne({ email: 'israel@example.com' });
+        const user = await User.findOne({ email: 'john@example.com' });
 
         // Pre-step: Create vehicle.
         await Vehicle.create({
@@ -133,7 +133,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
     test('PATCH /api/vehicles/:licensePlate - It should update vehicle details.', async () => {
 
         const token = await createAndLoginUser();
-        const user = await User.findOne({ email: 'israel@example.com' });
+        const user = await User.findOne({ email: 'john@example.com' });
 
         // Pre-step: Create vehicle.
         await Vehicle.create({
@@ -168,7 +168,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
     test('DELETE /api/vehicles/:licensePlate - It should delete the vehicle.', async () => {
 
         const token = await createAndLoginUser();
-        const user = await User.findOne({ email: 'israel@example.com' });
+        const user = await User.findOne({ email: 'john@example.com' });
 
         // Pre-step: Create vehicle.
         await Vehicle.create({
@@ -198,7 +198,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
     test('POST /api/vehicles/ - It should return 409 if license plate already exists.', async () => {
 
         const token = await createAndLoginUser();
-        const user = await User.findOne({ email: 'israel@example.com' });
+        const user = await User.findOne({ email: 'john@example.com' });
 
         // Pre-step: Create vehicle.
         await Vehicle.create({
@@ -245,7 +245,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
     test('PATCH /api/vehicles/:licensePlate - It should not allow updating licensePlate or userId.', async () => {
 
         const token = await createAndLoginUser();
-        const user = await User.findOne({ email: 'israel@example.com' });
+        const user = await User.findOne({ email: 'john@example.com' });
 
         // Pre-step: create vehicle.
         await Vehicle.create({

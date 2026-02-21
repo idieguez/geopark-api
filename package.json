@@ -15,7 +15,10 @@
     "type": "git",
     "url": "git+https://github.com/idieguez/geopark-api.git"
   },
-  "author": "Israel Diéguez",
+  "author": {
+    "name": "Israel Diéguez",
+    "url": "https://github.com/idieguez"
+  },
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/idieguez/geopark-api/issues"

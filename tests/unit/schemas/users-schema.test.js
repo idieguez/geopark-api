@@ -108,9 +108,9 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel@example.com',
+                name: 'John',
+                surname: 'Doe',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true,
                 isAdmin: true // <--

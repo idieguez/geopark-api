@@ -22,9 +22,9 @@ describe('Integration test suite for POST /api/auth/register.', () => {
 
         // Test data.
         const userData = {
-            name: 'Israel',
-            surname: 'Diéguez',
-            email: 'israel@example.com',
+            name: 'John',
+            surname: 'Doe',
+            email: 'john@example.com',
             password: 'Password123!',
             newsletter: true
         };
@@ -36,13 +36,13 @@ describe('Integration test suite for POST /api/auth/register.', () => {
 
         // 2. Verify HTTP response.
         expect(response.status).toBe(201);
-        expect(response.body.data.email).toBe('israel@example.com');
+        expect(response.body.data.email).toBe('john@example.com');
         expect(response.body.data).not.toHaveProperty('password'); // Security check: do not return password.
 
         // 3. Verify Database.
-        const userInDb = await User.findOne({ email: 'israel@example.com' }).select('+password');
+        const userInDb = await User.findOne({ email: 'john@example.com' }).select('+password');
         expect(userInDb).toBeTruthy(); // It must exist.
-        expect(userInDb.name).toBe('Israel');
+        expect(userInDb.name).toBe('John');
         expect(userInDb.password).not.toBe('Password123!'); // It must be hashed.
         expect(userInDb.password).toMatch(/^\$2b\$/); // Bcrypt hashes start with $2b$.
 
@@ -54,9 +54,9 @@ describe('Integration test suite for POST /api/auth/register.', () => {
 
         // Pre-step: Create a user directly in the DB.
         const existingUser = new User({
-            name: 'Israel',
-            surname: 'Diéguez',
-            email: 'israel@example.com',
+            name: 'John',
+            surname: 'Doe',
+            email: 'john@example.com',
             password: 'Password123!',
             newsletter: true
         });
@@ -66,9 +66,9 @@ describe('Integration test suite for POST /api/auth/register.', () => {
         const response = await request(app)
             .post('/api/auth/register')
             .send({
-                name: 'Israel',
+                name: 'John',
                 surname: 'Martín',
-                email: 'israel@example.com',
+                email: 'john@example.com',
                 password: 'Password123!',
                 newsletter: true
             });
@@ -86,9 +86,9 @@ describe('Integration test suite for POST /api/auth/register.', () => {
         const response = await request(app)
             .post('/api/auth/register')
             .send({
-                name: 'Israel',
-                surname: 'Diéguez',
-                email: 'israel-no-tiene-email', // <--
+                name: 'John',
+                surname: 'Doe',
+                email: 'john-no-tiene-email', // <--
                 password: 'Password123!',
                 newsletter: true
             });

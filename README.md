@@ -199,8 +199,8 @@ Este proyecto está licenciado bajo la Licencia AGPL-3.0. Consulta el archivo [L
 
 ## Contacto
 
-Para cualquier consulta o sugerencia, puedes contactarnos a través de:
+¿Tienes alguna duda, sugerencia o simplemente quieres conectar? ¡Estaré encantado de hablar contigo!
 
-- Correo electrónico: john@example.com
-- GitHub: [idieguez](https://github.com/idieguez)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Conectar-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/israeldieguez/)
+[![GitHub](https://img.shields.io/badge/GitHub-idieguez-181717?style=flat-square&logo=github)](https://github.com/idieguez)
 

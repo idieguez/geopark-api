@@ -3,3 +3,9 @@ node_modules/
 
 # IDE
 .vscode/
+
+# Environment Variables
+.env
+.env.development
+.env.production
+.env.test
