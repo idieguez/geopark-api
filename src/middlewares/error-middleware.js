@@ -42,6 +42,10 @@ const handleJWTError = () =>
 const handleJWTExpiredError = () => 
     new AppError('Your token has expired. Please log in again.', 401);
 
+// JSON syntax error (e.g., express.json() failing to parse invalid JSON).
+const handleJSONSyntaxError = () => 
+    new AppError('Invalid JSON format in the request body.', 400);
+
 
 
 
@@ -63,6 +67,7 @@ exports.errorMiddleware = function(err, req, res, next) {
     error.name = err.name;
     if (err.code) error.code = err.code;
 
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) error = handleJSONSyntaxError(); // JSON Syntax error.
     if (error.name === 'CastError') error = handleCastErrorDB(error); // Invalid ID error.
     if (error.code === 11000) error = handleDuplicateFieldsDB(err); // Duplicate fields error. We pass the original "err" which usually has errmsg.
     if (error.name === 'ValidationError') error = handleValidationErrorDB(error); // Mongoose validation error.
