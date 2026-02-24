@@ -27,6 +27,7 @@ Construida sobre Node.js y Express, esta REST API ha sido desarrollada priorizan
 
 ## Tabla de Contenidos
 
+- [Estructura del Proyecto](#estructura-del-proyecto)
 - [Tecnologías](#tecnologías)
 - [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
@@ -36,6 +37,36 @@ Construida sobre Node.js y Express, esta REST API ha sido desarrollada priorizan
 - [Tests](#tests)
 - [Licencia](#licencia)
 - [Contacto](#contacto)
+
+
+
+
+## Estructura del Proyecto
+
+El código está organizado siguiendo un enfoque modular, aplicando el principio de separación de responsabilidades (*separation of concerns*) para garantizar la escalabilidad, facilidad de mantenimiento y testing.
+
+```text
+geopark-api/
+├── doc/                # Documentación adicional (ej. colección de Postman)
+├── src/
+│   ├── controllers/    # Lógica de negocio (auth, usuarios, vehículos)
+│   ├── middlewares/    # Interceptores (autenticación JWT, validación, manejo de errores)
+│   ├── models/         # Definición de esquemas de base de datos (Mongoose)
+│   ├── routes/         # Definición y mapeo de los endpoints de la API
+│   ├── schemas/        # Esquemas de validación estricta de payloads (Zod)
+│   ├── utils/          # Clases y funciones auxiliares (AppError, catchAsync)
+│   ├── app.js          # Configuración principal de la aplicación Express
+│   ├── database.js     # Lógica de conexión a la base de datos MongoDB
+│   └── index.js        # Punto de entrada y arranque del servidor
+├── tests/
+│   ├── integration/    # Pruebas de integración de endpoints (Supertest)
+│   ├── unit/           # Pruebas unitarias de esquemas y funciones (Jest)
+│   ├── db-handler.js   # Gestión del ciclo de vida de la DB en memoria para tests
+│   └── setup-env.js    # Configuración del entorno de pruebas
+├── .env.example        # Plantilla segura de variables de entorno
+├── package.json        # Dependencias y scripts de ejecución
+└── README.md           # Documentación principal del proyecto
+```
 
 
 
