@@ -1,5 +1,6 @@
 const request = require('supertest');
 const bcrypt = require('bcrypt');
+
 const { app } = require('../../src/app');
 const { User } = require('../../src/models/User');
 const dbHandler = require('../db-handler');

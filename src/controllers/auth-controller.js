@@ -1,8 +1,10 @@
-const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+const { User } = require('../models/User');
 const { AppError } = require('../utils/app-error');
 const { catchAsync } = require('../utils/catch-async');
+
 const { JWT_SECRET, JWT_EXPIRES_IN, LA_MAX_ATTEMPTS, LA_LOCK_TIME } = process.env;
 
 

@@ -1,5 +1,6 @@
-const { User } = require('../models/User');
 const bcrypt = require('bcrypt');
+
+const { User } = require('../models/User');
 const { AppError } = require('../utils/app-error');
 const { catchAsync } = require('../utils/catch-async');
 

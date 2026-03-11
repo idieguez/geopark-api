@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Environment variables for MongoDB connection.
 const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE, MONGODB_AUTH_SOURCE } = process.env;
 
 // URI recommended for development environments (local instance, for example).

@@ -1,7 +1,9 @@
 require('dotenv').config({ path: '.env' });
+
 require('./utils/logger');
 const { connectToDatabase, disconnectFromDatabase } = require('./database');
 const { app } = require('./app');
+
 const { APP_PORT } = process.env;
 
 

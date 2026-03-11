@@ -1,7 +1,9 @@
-const { User } = require('../models/User');
 const jwt = require('jsonwebtoken');
+
+const { User } = require('../models/User');
 const { AppError } = require('../utils/app-error');
 const { catchAsync } = require('../utils/catch-async');
+
 const { JWT_SECRET } = process.env;
 
 
