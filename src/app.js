@@ -3,11 +3,14 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require("helmet");
 const morgan = require('morgan');
+
 const { router: authRoutes } = require('./routes/auth-routes');
 const { router: usersRoutes } = require('./routes/users-routes');
 const { router: vehiclesRoutes } = require('./routes/vehicles-routes');
 const { AppError } = require('./utils/app-error');
 const { errorMiddleware: globalErrorHandler } = require('./middlewares/error-middleware');
+const { getFormattedTime } = require('./utils/logger');
+
 const { ENV, CORS_ORIGIN, RL_GENERAL_MIN, RL_GENERAL_NREQ, RL_AUTH_MIN, RL_AUTH_NREQ } = process.env;
 
 
@@ -19,15 +22,26 @@ const app = express();
 
 
 
-// Configure Helmet (strengthen headers security), Morgan (logs HTTP requests) and CORS.
+// Configure Helmet (strengthen headers security).
 app.use(helmet());
 
+
+
+
+// Configure HTTP access logs (Morgan).
+morgan.token('time', () => getFormattedTime());
+
 if (ENV === 'DEV') {
-    app.use(morgan('dev'));
+    app.use(morgan('[:time] :method :url :status :response-time ms - :res[content-length]'));
 } else {
-    app.use(morgan('combined'));
+    // app.use(morgan('combined'));
+    app.use(morgan('[:time] :remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 }
 
+
+
+
+// Configure CORS.
 const corsAllowNoOrigin = ENV === 'DEV' || ENV === 'TEST';
 const corsWhitelist = CORS_ORIGIN.split(',').map(origin => origin.trim());
 
