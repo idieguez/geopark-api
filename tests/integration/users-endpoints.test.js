@@ -143,4 +143,72 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
     });
 
+
+    // Case 6: Update password (happy path).
+    test('PATCH /api/users/update-password - It should update password and return a new token.', async () => {
+
+        const token = await createAndLoginUser(); // Password is 'Password123!'
+
+        // 1. Request password update.
+        const response = await request(app)
+            .patch('/api/users/update-password')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                passwordCurrent: 'Password123!',
+                passwordNew: 'NewSecurePass_456!'
+            });
+
+        // 2. Verify response.
+        expect(response.status).toBe(200);
+        expect(response.body.data).toHaveProperty('token'); // Must return the new JWT inside data.
+
+        // 3. Verify DB (checking if hash changed).
+        const userInDb = await User.findOne({ email: 'john@example.com' }).select('+password');
+        const isMatch = await bcrypt.compare('NewSecurePass_456!', userInDb.password);
+        expect(isMatch).toBe(true); // The new password must be working.
+
+    });
+
+
+    // Case 7: Update password with wrong current password.
+    test('PATCH /api/users/update-password - It should return 401 if current password is wrong.', async () => {
+
+        const token = await createAndLoginUser();
+
+        // 1. Request password update with WRONG current password.
+        const response = await request(app)
+            .patch('/api/users/update-password')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                passwordCurrent: 'WrongCurrentPass!', // <--
+                passwordNew: 'NewSecurePass_456!'
+            });
+
+        // 2. Verify response.
+        expect(response.status).toBe(401);
+        expect(response.body.message).toContain('incorrect');
+
+    });
+
+
+    // Case 8: Block password updates in the generic user endpoint.
+    test('PATCH /api/users/ - It should return 400 if trying to update password through generic endpoint.', async () => {
+
+        const token = await createAndLoginUser();
+
+        // 1. Attempt to exploit the old route.
+        const response = await request(app)
+            .patch('/api/users/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                password: 'HackerPassword123!' // <-- Trying to inject password
+            });
+
+        // 2. Verify response.
+        expect(response.status).toBe(400);
+        expect(response.body.message).toContain('Unrecognized key');
+        expect(response.body.message).toContain('password');
+
+    });
+
 });

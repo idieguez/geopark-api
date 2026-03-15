@@ -1,8 +1,11 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const { User } = require('../models/User');
 const { AppError } = require('../utils/app-error');
 const { catchAsync } = require('../utils/catch-async');
+
+const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
 
 
@@ -65,15 +68,9 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     if (userParam.email) {
         return next(new AppError(`It is not allowed to update the user's email address.`, 400));
     }
-    
+
     if (userParam.dateUserCreation || userParam.dateLastUserModification || userParam.dateLastPasswordModification) {
         return next(new AppError(`It is not allowed to update the dates.`, 400));
-    }
-
-    // Check if the password is being updated.
-    if (userParam.password) {
-        userParam.password = await bcrypt.hash(userParam.password, 12);
-        userParam.dateLastPasswordModification = new Date();
     }
 
     // Dates update.
@@ -92,7 +89,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     });
 
     if (!user2) {
-        return next(new AppError(`Error when updating the user.`, 404));
+        return next(new AppError(`Error when updating the user.`, 500));
     }
 
     // Return user.
@@ -110,6 +107,69 @@ exports.updateUser = catchAsync(async (req, res, next) => {
             dateUserCreation: user2.dateUserCreation,
             dateLastUserModification: user2.dateLastUserModification,
             dateLastPasswordModification: user2.dateLastPasswordModification
+        }
+    });
+
+});
+
+
+
+
+/*
+ * Update user password.
+ * PATCH /api/users/update-password/
+ */
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+
+    // Get parameters.
+    const userIdParam = req.userId; // The user id is obtained from the token (vía auth-middleware).
+    const {
+        passwordCurrent: passwordCurrentParam,
+        passwordNew: passwordNewParam
+    } = req.body;
+
+    // Get user. We explicitly select the password because it has select: false in the model.
+    const user = await User.findOne({ _id: userIdParam }).select('+password').exec();
+    if (!user) {
+        return next(new AppError(`User not found.`, 404));
+    }
+
+    // Check if current password is correct.
+    const isMatch = await bcrypt.compare(passwordCurrentParam, user.password);
+    if (!isMatch) {
+        return next(new AppError(`The current password is incorrect.`, 401));
+    }
+
+    // Hash the new password.
+    const hashedPassword = await bcrypt.hash(passwordNewParam, 12);
+
+    // Update user in the database.
+    const updatedUser = await User.findByIdAndUpdate(userIdParam, {
+        password: hashedPassword,
+        dateLastPasswordModification: new Date(),
+        dateLastUserModification: new Date()
+    }, { 
+        returnDocument: 'after', // Using the updated mongoose standard
+        runValidators: true 
+    });
+
+    if (!updatedUser) {
+        return next(new AppError(`Error when updating the password.`, 500));
+    }
+
+    // Generate a new JWT token to keep the user logged in seamlessly.
+    const token = jwt.sign(
+        { userId: updatedUser._id },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    // Return response.
+    res.status(200).json({
+        status: 'success',
+        data: {
+            token: token
         }
     });
 
@@ -137,7 +197,7 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     // Delete user from the database.
     const result = await User.deleteOne({ _id: userIdParam }).exec();
     if (result.deletedCount === 0) {
-        return next(new AppError(`Error when deleting the user.`, 404));
+        return next(new AppError(`Error when deleting the user.`, 500));
     }
     
     // Respond.

@@ -1,5 +1,5 @@
 // Import the schema to be tested.
-const { updateUserSchema } = require('../../../src/schemas/users-schema');
+const { updateUserSchema, updatePasswordSchema } = require('../../../src/schemas/users-schema');
 
 
 
@@ -118,6 +118,77 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
         };
 
         const result = updateUserSchema.safeParse(input);
+        expect(result.success).toBe(false);
+
+    });
+
+});
+
+
+
+
+// Test suite for users-schema - updatePasswordSchema.
+describe('Test suite for users-schema - updatePasswordSchema.', () => {
+
+    // Case 1: the happy path.
+    test('It must properly validate a password update request.', () => {
+
+        const input = {
+            body: {
+                passwordCurrent: 'OldPassword123!',
+                passwordNew: 'NewPassword123@'
+            }
+        };
+
+        const result = updatePasswordSchema.safeParse(input);
+        expect(result.success).toBe(true);
+
+    });
+
+
+    // Case 2: missing current password.
+    test('It should fail if the current password is missing.', () => {
+
+        const input = {
+            body: {
+                passwordNew: 'NewPassword123@' // <-- passwordCurrent is missing
+            }
+        };
+
+        const result = updatePasswordSchema.safeParse(input);
+        expect(result.success).toBe(false);
+
+    });
+
+
+    // Case 3: weak new password.
+    test('It should fail if the new password does not contain a special character.', () => {
+
+        const input = {
+            body: {
+                passwordCurrent: 'OldPassword123!',
+                passwordNew: 'NewPassword123' // <-- No special character
+            }
+        };
+
+        const result = updatePasswordSchema.safeParse(input);
+        expect(result.success).toBe(false);
+
+    });
+
+
+    // Case 4: security (strict mode).
+    test('It should fail if forbidden fields are sent (e.g., passwordConfirm or isAdmin).', () => {
+
+        const input = {
+            body: {
+                passwordCurrent: 'OldPassword123!',
+                passwordNew: 'NewPassword123@',
+                passwordConfirm: 'NewPassword123@' // <-- Rejected because we decided to handle this in frontend
+            }
+        };
+
+        const result = updatePasswordSchema.safeParse(input);
         expect(result.success).toBe(false);
 
     });

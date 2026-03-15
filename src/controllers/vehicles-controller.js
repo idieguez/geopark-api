@@ -218,7 +218,7 @@ exports.updateVehicle = catchAsync(async (req, res, next) => {
     });
 
     if (!vehicle2) {
-        return next(new AppError(`Error when updating the vehicle.`, 404));
+        return next(new AppError(`Error when updating the vehicle.`, 500));
     }
 
     // Return vehicle.
@@ -269,7 +269,7 @@ exports.deleteVehicle = catchAsync(async (req, res, next) => {
     // Delete vehicle from the database.
     const result = await Vehicle.deleteOne({ licensePlate: licensePlateParam }).exec();
     if (result.deletedCount === 0) {
-        return next(new AppError(`Error when deleting the vehicle.`, 404));
+        return next(new AppError(`Error when deleting the vehicle.`, 500));
     }
     
     // Respond.
