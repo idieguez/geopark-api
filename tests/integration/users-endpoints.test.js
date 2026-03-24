@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 
 const { app } = require('../../src/app');
 const { User } = require('../../src/models/User');
+const { Vehicle } = require('../../src/models/Vehicle');
 const dbHandler = require('../db-handler');
 
 
@@ -114,9 +115,20 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
 
     // Case 4: Delete user (happy path).
-    test('DELETE /api/users/ - It should delete the authenticated user.', async () => {
+    test('DELETE /api/users/ - It should delete the authenticated user and their associated vehicles.', async () => {
 
         const token = await createAndLoginUser();
+
+        // Pre-step: obtain the user and create a vehicle for them to test cascade delete.
+        const user = await User.findOne({ email: 'john@example.com' });
+        await Vehicle.create({
+            userId: user._id,
+            licensePlate: '1234ABC',
+            type: 'car',
+            brand: 'Mercedes-Benz',
+            model: 'Vito',
+            notes: 'For the whole family.'
+        });
 
         // 1. Request delete.
         const response = await request(app)
@@ -126,9 +138,13 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         // 2. Verify response.
         expect(response.status).toBe(204);
 
-        // 3. Verify DB.
+        // 3. Verify DB for user.
         const userInDb = await User.findOne({ email: 'john@example.com' });
         expect(userInDb).toBeNull();
+
+        // 4. Verify DB for vehicle.
+        const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
+        expect(vehicleInDb).toBeNull();
 
     });
 

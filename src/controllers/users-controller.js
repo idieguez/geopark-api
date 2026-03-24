@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const { User } = require('../models/User');
+const { Vehicle } = require('../models/Vehicle');
 const { AppError } = require('../utils/app-error');
 const { catchAsync } = require('../utils/catch-async');
 
@@ -193,6 +194,9 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     if (!user) {
         return next(new AppError(`User not found.`, 404));
     }
+
+    // Delete all vehicles associated with the user.
+    await Vehicle.deleteMany({ userId: userIdParam }).exec();
 
     // Delete user from the database.
     const result = await User.deleteOne({ _id: userIdParam }).exec();
