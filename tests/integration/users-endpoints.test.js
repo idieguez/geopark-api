@@ -114,12 +114,12 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
     });
 
 
-    // Case 4: Delete user (happy path).
-    test('DELETE /api/users/ - It should delete the authenticated user and their associated vehicles.', async () => {
+    // Case 4: Delete account and their vehicles (cascade delete).
+    test('POST /api/users/delete-account/ - It should delete the authenticated user and their associated vehicles.', async () => {
 
         const token = await createAndLoginUser();
-
-        // Pre-step: obtain the user and create a vehicle for them to test cascade delete.
+        
+        // Pre-step: Obtain the user and create a vehicle for them to test cascade delete.
         const user = await User.findOne({ email: 'john@example.com' });
         await Vehicle.create({
             userId: user._id,
@@ -130,21 +130,48 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             notes: 'For the whole family.'
         });
 
-        // 1. Request delete.
+        // 1. Request delete account.
         const response = await request(app)
-            .delete('/api/users/')
-            .set('Authorization', `Bearer ${token}`);
+            .post('/api/users/delete-account/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                password: 'Password123!'
+            });
 
         // 2. Verify response.
         expect(response.status).toBe(204);
 
-        // 3. Verify DB for user.
+        // 3. Verify DB (User must be deleted).
         const userInDb = await User.findOne({ email: 'john@example.com' });
         expect(userInDb).toBeNull();
 
-        // 4. Verify DB for vehicle.
+        // 4. Verify DB (Vehicles must be deleted).
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
         expect(vehicleInDb).toBeNull();
+
+    });
+
+
+    // Case 4.1: Delete account with wrong password.
+    test('POST /api/users/delete-account/ - It should return 401 if the password is incorrect.', async () => {
+
+        const token = await createAndLoginUser();
+
+        // 1. Request delete account with wrong password.
+        const response = await request(app)
+            .post('/api/users/delete-account/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                password: 'WrongPassword123!' // <--
+            });
+
+        // 2. Verify response.
+        expect(response.status).toBe(401);
+        expect(response.body.message).toContain('incorrect');
+
+        // 3. Verify DB (User must NOT be deleted).
+        const userInDb = await User.findOne({ email: 'john@example.com' });
+        expect(userInDb).not.toBeNull();
 
     });
 

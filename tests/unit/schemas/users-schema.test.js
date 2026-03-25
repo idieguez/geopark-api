@@ -1,5 +1,5 @@
 // Import the schema to be tested.
-const { updateUserSchema, updatePasswordSchema } = require('../../../src/schemas/users-schema');
+const { updateUserSchema, updatePasswordSchema, deleteAccountSchema } = require('../../../src/schemas/users-schema');
 
 
 
@@ -189,6 +189,41 @@ describe('Test suite for users-schema - updatePasswordSchema.', () => {
         };
 
         const result = updatePasswordSchema.safeParse(input);
+        expect(result.success).toBe(false);
+
+    });
+
+});
+
+
+
+
+// Test suite for users-schema - deleteAccountSchema.
+describe('Test suite for users-schema - deleteAccountSchema.', () => {
+
+    // Case 1: the happy path.
+    test('It must properly validate a delete account request.', () => {
+
+        const input = {
+            body: {
+                password: 'Password123!'
+            }
+        };
+
+        const result = deleteAccountSchema.safeParse(input);
+        expect(result.success).toBe(true);
+
+    });
+
+    
+    // Case 2: missing password.
+    test('It should fail if the password is missing.', () => {
+
+        const input = {
+            body: {} // <-- password is missing
+        };
+
+        const result = deleteAccountSchema.safeParse(input);
         expect(result.success).toBe(false);
 
     });

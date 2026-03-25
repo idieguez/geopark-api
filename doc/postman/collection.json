@@ -1825,7 +1825,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"passwordCurrent\": \"john.bad.password\",\r\n  \"passwordNew\": \"john.doe.2\"\r\n}\r\n",
+                  "raw": "{\r\n  \"passwordCurrent\": \"john.doe.1.wrong\",\r\n  \"passwordNew\": \"john.doe.2\"\r\n}\r\n",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1918,11 +1918,11 @@
                 },
                 {
                   "key": "RateLimit-Remaining",
-                  "value": "492"
+                  "value": "499"
                 },
                 {
                   "key": "RateLimit-Reset",
-                  "value": "670"
+                  "value": "900"
                 },
                 {
                   "key": "Content-Type",
@@ -1930,15 +1930,15 @@
                 },
                 {
                   "key": "Content-Length",
-                  "value": "261"
+                  "value": "64"
                 },
                 {
                   "key": "ETag",
-                  "value": "W/\"105-MRxh9+F4cWkDfnEqGNQ26SFty1Q\""
+                  "value": "W/\"40-UyiZ47zvalef8iLFooXR8RCYmW8\""
                 },
                 {
                   "key": "Date",
-                  "value": "Sun, 15 Mar 2026 20:17:46 GMT"
+                  "value": "Wed, 25 Mar 2026 19:14:48 GMT"
                 },
                 {
                   "key": "Connection",
@@ -1950,14 +1950,14 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"status\": \"fail\",\n    \"error\": {\n        \"statusCode\": 401,\n        \"status\": \"fail\",\n        \"isOperational\": true\n    },\n    \"message\": \"The current password is incorrect.\",\n    \"stack\": \"Error: The current password is incorrect.\\n    at D:\\\\Workspace\\\\geopark-api\\\\src\\\\controllers\\\\users-controller.js:141:21\"\n}"
+              "body": "{\n    \"status\": \"fail\",\n    \"message\": \"The current password is incorrect.\"\n}"
             }
           ]
         },
         {
-          "name": "/users/",
+          "name": "/users/delete-account/",
           "request": {
-            "method": "DELETE",
+            "method": "POST",
             "header": [
               {
                 "key": "Authorization",
@@ -1970,13 +1970,23 @@
                 "type": "text"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"password\": \"john.doe.1\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{base_url}}/users/",
+              "raw": "{{base_url}}/users/delete-account/",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "users",
+                "delete-account",
                 ""
               ]
             }
@@ -1985,7 +1995,7 @@
             {
               "name": "204 No Content",
               "originalRequest": {
-                "method": "DELETE",
+                "method": "POST",
                 "header": [
                   {
                     "key": "Authorization",
@@ -1998,13 +2008,23 @@
                     "type": "text"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"password\": \"john.doe.1\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "url": {
-                  "raw": "{{base_url}}/users/",
+                  "raw": "{{base_url}}/users/delete-account/",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "users",
+                    "delete-account",
                     ""
                   ]
                 }
@@ -2075,23 +2095,23 @@
                 },
                 {
                   "key": "RateLimit-Policy",
-                  "value": "50;w=600"
+                  "value": "500;w=900"
                 },
                 {
                   "key": "RateLimit-Limit",
-                  "value": "50"
+                  "value": "500"
                 },
                 {
                   "key": "RateLimit-Remaining",
-                  "value": "37"
+                  "value": "496"
                 },
                 {
                   "key": "RateLimit-Reset",
-                  "value": "341"
+                  "value": "767"
                 },
                 {
                   "key": "Date",
-                  "value": "Tue, 24 Feb 2026 20:39:42 GMT"
+                  "value": "Wed, 25 Mar 2026 19:17:02 GMT"
                 },
                 {
                   "key": "Connection",
@@ -2108,7 +2128,7 @@
             {
               "name": "401 Unauthorized",
               "originalRequest": {
-                "method": "DELETE",
+                "method": "POST",
                 "header": [
                   {
                     "key": "Authorization",
@@ -2121,13 +2141,23 @@
                     "type": "text"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"password\": \"john.doe.1-wrong\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "url": {
-                  "raw": "{{base_url}}/users/",
+                  "raw": "{{base_url}}/users/delete-account/",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "users",
+                    "delete-account",
                     ""
                   ]
                 }
@@ -2198,19 +2228,19 @@
                 },
                 {
                   "key": "RateLimit-Policy",
-                  "value": "50;w=600"
+                  "value": "500;w=900"
                 },
                 {
                   "key": "RateLimit-Limit",
-                  "value": "50"
+                  "value": "500"
                 },
                 {
                   "key": "RateLimit-Remaining",
-                  "value": "47"
+                  "value": "497"
                 },
                 {
                   "key": "RateLimit-Reset",
-                  "value": "573"
+                  "value": "804"
                 },
                 {
                   "key": "Content-Type",
@@ -2218,15 +2248,15 @@
                 },
                 {
                   "key": "Content-Length",
-                  "value": "80"
+                  "value": "56"
                 },
                 {
                   "key": "ETag",
-                  "value": "W/\"50-x6QDpFLArcYtDHplnQSDSvvZHNU\""
+                  "value": "W/\"38-CAW7ScreU7wJiKvAd9eY8Wzm9MY\""
                 },
                 {
                   "key": "Date",
-                  "value": "Tue, 24 Feb 2026 20:35:50 GMT"
+                  "value": "Wed, 25 Mar 2026 19:16:25 GMT"
                 },
                 {
                   "key": "Connection",
@@ -2238,7 +2268,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"status\": \"fail\",\n    \"message\": \"A valid token was not found. Authorization denied.\"\n}"
+              "body": "{\n    \"status\": \"fail\",\n    \"message\": \"The password is incorrect.\"\n}"
             }
           ]
         }

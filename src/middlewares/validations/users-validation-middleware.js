@@ -1,5 +1,5 @@
 const { validateSchema } = require('../validation-middleware');
-const { updateUserSchema, updatePasswordSchema } = require('../../schemas/users-schema');
+const { updateUserSchema, updatePasswordSchema, deleteAccountSchema } = require('../../schemas/users-schema');
 
 
 
@@ -10,3 +10,4 @@ const { updateUserSchema, updatePasswordSchema } = require('../../schemas/users-
 
 exports.validateUpdateUser = validateSchema(updateUserSchema);
 exports.validateUpdatePassword = validateSchema(updatePasswordSchema);
+exports.validateDeleteAccount = validateSchema(deleteAccountSchema);

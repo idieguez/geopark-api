@@ -180,19 +180,26 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 
 /*
- * Delete a user.
- * DELETE /api/users/
+ * Delete user account.
+ * POST /api/users/delete-account/
  */
 
-exports.deleteUser = catchAsync(async (req, res, next) => {
+exports.deleteAccount = catchAsync(async (req, res, next) => {
 
     // Get parameters.
     const userIdParam = req.userId; // The user id is obtained from the token (vía auth-middleware).
+    const { password: passwordParam } = req.body;
 
-    // Get user.
-    const user = await User.findOne({ _id: userIdParam }).exec();
+    // Get user. We explicitly select the password because it has select: false in the model.
+    const user = await User.findOne({ _id: userIdParam }).select('+password').exec();
     if (!user) {
         return next(new AppError(`User not found.`, 404));
+    }
+
+    // Check if password is correct.
+    const isMatch = await bcrypt.compare(passwordParam, user.password);
+    if (!isMatch) {
+        return next(new AppError(`The password is incorrect.`, 401));
     }
 
     // Delete all vehicles associated with the user.

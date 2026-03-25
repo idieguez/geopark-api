@@ -1,8 +1,8 @@
 const express = require('express');
 
 const { authMiddleware } = require('../middlewares/auth-middleware');
-const { getUser, updateUser, updatePassword, deleteUser } = require('../controllers/users-controller');
-const { validateUpdateUser, validateUpdatePassword } = require('../middlewares/validations/users-validation-middleware');
+const { getUser, updateUser, updatePassword, deleteAccount } = require('../controllers/users-controller');
+const { validateUpdateUser, validateUpdatePassword, validateDeleteAccount } = require('../middlewares/validations/users-validation-middleware');
 
 
 
@@ -23,7 +23,7 @@ const router = express.Router();
 router.get('/', authMiddleware, getUser);
 router.patch('/', authMiddleware, validateUpdateUser, updateUser);
 router.patch('/update-password', authMiddleware, validateUpdatePassword, updatePassword);
-router.delete('/', authMiddleware, deleteUser);
+router.post('/delete-account/', authMiddleware, validateDeleteAccount, deleteAccount);
 
 
 

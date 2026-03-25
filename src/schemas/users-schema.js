@@ -89,3 +89,23 @@ exports.updatePasswordSchema = z.object({
     }).strict()
 
 });
+
+
+
+
+/*
+ * User delete account validation schema.
+ */
+
+exports.deleteAccountSchema = z.object({
+
+    body: z.object({
+
+        // Password for confirmation.
+        password: z.string({
+            required_error: 'Password is required to delete the account'
+        })
+
+    }).strict()
+
+});
