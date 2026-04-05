@@ -85,7 +85,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
     // Update user in the database.
     const user2 = await User.findByIdAndUpdate(userIdParam, userParam, {
-        new: true, // Returns the updated document.
+        returnDocument: 'after', // Returns the updated document.
         runValidators: true // Executes the validations defined in the schema.
     });
 

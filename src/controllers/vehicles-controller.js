@@ -213,7 +213,7 @@ exports.updateVehicle = catchAsync(async (req, res, next) => {
 
     // Update vehicle in the database.
     const vehicle2 = await Vehicle.findByIdAndUpdate(vehicle1._id, vehicleParam, {
-        new: true, // Returns the updated document.
+        returnDocument: 'after', // Returns the updated document.
         runValidators: true // Executes the validations defined in the schema.
     });
 
