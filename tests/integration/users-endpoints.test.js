@@ -28,9 +28,9 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         const pastDate = new Date(Date.now() - 60000); // 1 minute ago.
 
         await User.create({
-            name: 'John',
-            surname: 'Doe',
-            email: 'john@example.com',
+            name: 'Alejandro',
+            surname: 'Martínez',
+            email: 'alejandro@example.com',
             password: hashedPassword,
             newsletter: true,
             dateLastPasswordModification: pastDate
@@ -40,7 +40,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         const loginResponse = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'john@example.com',
+                email: 'alejandro@example.com',
                 password: 'Password123!'
             });
         
@@ -60,8 +60,8 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.data.email).toBe('john@example.com');
-        expect(response.body.data.name).toBe('John');
+        expect(response.body.data.email).toBe('alejandro@example.com');
+        expect(response.body.data.name).toBe('Alejandro');
         expect(response.body.data).not.toHaveProperty('password');
 
     });
@@ -77,18 +77,18 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                name: 'John New',
-                surname: 'Doe New'
+                name: 'Alejandro Editado',
+                surname: 'Martínez Editado'
             });
 
         // 2. Verify response.
         expect(response.status).toBe(200);
-        expect(response.body.data.name).toBe('John New');
-        expect(response.body.data.surname).toBe('Doe New');
+        expect(response.body.data.name).toBe('Alejandro Editado');
+        expect(response.body.data.surname).toBe('Martínez Editado');
 
         // 3. Verify DB persistence.
-        const userInDb = await User.findOne({ email: 'john@example.com' });
-        expect(userInDb.name).toBe('John New');
+        const userInDb = await User.findOne({ email: 'alejandro@example.com' });
+        expect(userInDb.name).toBe('Alejandro Editado');
 
     });
 
@@ -103,7 +103,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                email: 'luis@example.com' // Forbidden.
+                email: 'david@example.com' // Forbidden.
             });
 
         // 2. Verify response.
@@ -120,7 +120,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         const token = await createAndLoginUser();
         
         // Pre-step: Obtain the user and create a vehicle for them to test cascade delete.
-        const user = await User.findOne({ email: 'john@example.com' });
+        const user = await User.findOne({ email: 'alejandro@example.com' });
         await Vehicle.create({
             userId: user._id,
             licensePlate: '1234ABC',
@@ -142,7 +142,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         expect(response.status).toBe(204);
 
         // 3. Verify DB (User must be deleted).
-        const userInDb = await User.findOne({ email: 'john@example.com' });
+        const userInDb = await User.findOne({ email: 'alejandro@example.com' });
         expect(userInDb).toBeNull();
 
         // 4. Verify DB (Vehicles must be deleted).
@@ -170,7 +170,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         expect(response.body.message).toContain('incorrect');
 
         // 3. Verify DB (User must NOT be deleted).
-        const userInDb = await User.findOne({ email: 'john@example.com' });
+        const userInDb = await User.findOne({ email: 'alejandro@example.com' });
         expect(userInDb).not.toBeNull();
 
     });
@@ -206,7 +206,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
         expect(response.body.data).toHaveProperty('token'); // Must return the new JWT inside data.
 
         // 3. Verify DB (checking if hash changed).
-        const userInDb = await User.findOne({ email: 'john@example.com' }).select('+password');
+        const userInDb = await User.findOne({ email: 'alejandro@example.com' }).select('+password');
         const isMatch = await bcrypt.compare('NewSecurePass_456!', userInDb.password);
         expect(isMatch).toBe(true); // The new password must be working.
 

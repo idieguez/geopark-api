@@ -25,9 +25,9 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         // Pre-step: Create a user in the DB.
         const hashedPassword = await bcrypt.hash('Password123!', 10);
         await User.create({
-            name: 'John',
-            surname: 'Doe',
-            email: 'john@example.com',
+            name: 'Alejandro',
+            surname: 'Martínez',
+            email: 'alejandro@example.com',
             password: hashedPassword,
             newsletter: true
         });
@@ -36,15 +36,15 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         const response = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'john@example.com',
+                email: 'alejandro@example.com',
                 password: 'Password123!'
             });
 
         // 2. Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data).toHaveProperty('token');
-        expect(response.body.data.email).toBe('john@example.com');
-        expect(response.body.data.name).toBe('John');
+        expect(response.body.data.email).toBe('alejandro@example.com');
+        expect(response.body.data.name).toBe('Alejandro');
 
         // Optional: Verify token format (basic check).
         expect(typeof response.body.data.token).toBe('string');
@@ -59,9 +59,9 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         // Pre-step: Create a user in the DB.
         const hashedPassword = await bcrypt.hash('Password123!', 10);
         await User.create({
-            name: 'John',
-            surname: 'Doe',
-            email: 'john@example.com',
+            name: 'Alejandro',
+            surname: 'Martínez',
+            email: 'alejandro@example.com',
             password: hashedPassword,
             newsletter: true
         });
@@ -70,7 +70,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
         const response = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'john@example.com',
+                email: 'alejandro@example.com',
                 password: 'WrongPassword!' // <--
             });
 

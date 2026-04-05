@@ -12,7 +12,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                name: 'Luis'
+                name: 'David'
             }
         };
 
@@ -61,7 +61,7 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                email: 'luis@example.com' // <--
+                email: 'david@example.com' // <--
             }
         };
 
@@ -108,9 +108,9 @@ describe('Test suite for users-schema - updateUserSchema.', () => {
 
         const input = {
             body: {
-                name: 'John',
-                surname: 'Doe',
-                email: 'john@example.com',
+                name: 'Alejandro',
+                surname: 'Martínez',
+                email: 'alejandro@example.com',
                 password: 'Password123!',
                 newsletter: true,
                 isAdmin: true // <--
