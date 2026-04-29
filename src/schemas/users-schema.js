@@ -36,7 +36,6 @@ exports.updateUserSchema = z.object({
         
         // Newsletter.
         newsletter: z.boolean({
-            required_error: 'Newsletter preference is required',
             invalid_type_error: 'Newsletter must be a boolean'
         })
         .optional(),
