@@ -22,7 +22,7 @@ exports.authMiddleware = catchAsync(async (req, res, next) => {
     }
 
     if (!token) {
-        return next(new AppError('A valid token was not found. Authorization denied.', 401));
+        return next(new AppError('A valid token was not found. Authorization denied.', 401, 'ERR_AUTH_TOKEN_NOT_FOUND'));
     }
 
     // Verify the token.
@@ -31,7 +31,7 @@ exports.authMiddleware = catchAsync(async (req, res, next) => {
     // Verify the user id exists.
     const user = await User.findOne({ _id: decoded.userId }).exec();
     if (!user) {
-        return next(new AppError('Invalid or expired token. Authorization denied.', 401));
+        return next(new AppError('Invalid or expired token. Authorization denied.', 401, 'ERR_AUTH_TOKEN_INVALID_OR_EXPIRED'));
     }
 
     // Verify if the token was issued before a password change.
@@ -39,7 +39,7 @@ exports.authMiddleware = catchAsync(async (req, res, next) => {
         const changedTimestamp = parseInt(user.dateLastPasswordModification.getTime() / 1000, 10);
         
         if (changedTimestamp > decoded.iat) {
-            return next(new AppError('Token is no longer valid due to a password change. Please log in again.', 401));
+            return next(new AppError('Token is no longer valid due to a password change. Please log in again.', 401, 'ERR_AUTH_TOKEN_EXPIRED_PASSWORD_CHANGED'));
         }
     }
 

@@ -25,7 +25,7 @@ exports.createVehicle = catchAsync(async (req, res, next) => {
     // Check if the license plate already exists.
     const existingVehicle = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
     if (existingVehicle) {
-        return next(new AppError(`The license plate already exists.`, 409));
+        return next(new AppError('The license plate already exists.', 409, 'ERR_VEHICLES_DUPLICATE_LICENSE_PLATE'));
     }
 
     // Create new vehicle.
@@ -119,12 +119,12 @@ exports.getVehicle = catchAsync(async (req, res, next) => {
     // Get vehicle.
     const vehicle = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
     if (!vehicle) {
-        return next(new AppError(`Vehicle not found.`, 404));
+        return next(new AppError('Vehicle not found.', 404, 'ERR_VEHICLES_NOT_FOUND'));
     }
 
     // Check if the user is authorized to access the vehicle.
     if (vehicle.userId.toString() !== userIdParam) {
-        return next(new AppError(`The user is not authorized to access this vehicle.`, 403));
+        return next(new AppError('The user is not authorized to access this vehicle.', 403, 'ERR_VEHICLES_UNAUTHORIZED_ACCESS'));
     }
 
     // Return vehicle.
@@ -164,19 +164,19 @@ exports.updateVehicle = catchAsync(async (req, res, next) => {
 
     // Security checks: exclude _id, licensePlate, userId and dates from updates.
     if (vehicleParam._id) {
-        return next(new AppError(`It is not allowed to update the vehicle id.`, 400));
+        return next(new AppError('It is not allowed to update the vehicle id.', 400, 'ERR_VEHICLES_FORBIDDEN_UPDATE_ID'));
     }
 
     if (vehicleParam.licensePlate) {
-        return next(new AppError(`It is not allowed to update the vehicle's license plate.`, 400));
+        return next(new AppError('It is not allowed to update the vehicle\'s license plate.', 400, 'ERR_VEHICLES_FORBIDDEN_UPDATE_PLATE'));
     }
 
     if (vehicleParam.userId) {
-        return next(new AppError(`It is not allowed to update the user id associated with the vehicle.`, 400));
+        return next(new AppError('It is not allowed to update the user id associated with the vehicle.', 400, 'ERR_VEHICLES_FORBIDDEN_UPDATE_USER_ID'));
     }
     
     if (vehicleParam.dateVehicleCreation || vehicleParam.dateLastVehicleModification || vehicleParam.dateLastLocationModification) {
-        return next(new AppError(`It is not allowed to update the dates.`, 400));
+        return next(new AppError('It is not allowed to update the dates.', 400, 'ERR_VEHICLES_FORBIDDEN_UPDATE_DATES'));
     }
 
     // Check if the location is being updated.
@@ -203,12 +203,12 @@ exports.updateVehicle = catchAsync(async (req, res, next) => {
     // Get vehicle.
     const vehicle1 = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
     if (!vehicle1) {
-        return next(new AppError(`Vehicle not found.`, 404));
+        return next(new AppError('Vehicle not found.', 404, 'ERR_VEHICLES_NOT_FOUND'));
     }
 
     // Check if the user is authorized to access the vehicle.
     if (vehicle1.userId.toString() !== userIdParam) {
-        return next(new AppError(`The user is not authorized to access this vehicle.`, 403));
+        return next(new AppError('The user is not authorized to access this vehicle.', 403, 'ERR_VEHICLES_UNAUTHORIZED_ACCESS'));
     }
 
     // Update vehicle in the database.
@@ -218,7 +218,7 @@ exports.updateVehicle = catchAsync(async (req, res, next) => {
     });
 
     if (!vehicle2) {
-        return next(new AppError(`Error when updating the vehicle.`, 500));
+        return next(new AppError('Error when updating the vehicle.', 500, 'ERR_VEHICLES_UPDATE_FAILED'));
     }
 
     // Return vehicle.
@@ -258,18 +258,18 @@ exports.deleteVehicle = catchAsync(async (req, res, next) => {
     // Get vehicle.
     const vehicle = await Vehicle.findOne({ licensePlate: licensePlateParam }).exec();
     if (!vehicle) {
-        return next(new AppError(`Vehicle not found.`, 404));
+        return next(new AppError('Vehicle not found.', 404, 'ERR_VEHICLES_NOT_FOUND'));
     }
 
     // Check if the user is authorized to access the vehicle.
     if (vehicle.userId.toString() !== userIdParam) {
-        return next(new AppError(`The user is not authorized to access this vehicle.`, 403));
+        return next(new AppError('The user is not authorized to access this vehicle.', 403, 'ERR_VEHICLES_UNAUTHORIZED_ACCESS'));
     }
 
     // Delete vehicle from the database.
     const result = await Vehicle.deleteOne({ licensePlate: licensePlateParam }).exec();
     if (result.deletedCount === 0) {
-        return next(new AppError(`Error when deleting the vehicle.`, 500));
+        return next(new AppError('Error when deleting the vehicle.', 500, 'ERR_VEHICLES_DELETE_FAILED'));
     }
     
     // Respond.

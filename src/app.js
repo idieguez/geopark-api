@@ -63,7 +63,7 @@ const corsOptions = {
         const message = !origin
             ? 'Not allowed by CORS (missing origin).' 
             : `Not allowed by CORS (origin ${origin} not whitelisted).`;
-        return callback(new AppError(message, 403));
+        return callback(new AppError(message, 403, 'ERR_APP_ORIGIN_NOT_ALLOWED_BY_CORS'));
 
     },
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -108,7 +108,7 @@ app.use('/api/users', generalLimiter, usersRoutes);
 app.use('/api/vehicles', generalLimiter, vehiclesRoutes);
 
 app.all(/.* /, (req, res, next) => { // Unhandled routes (404).
-    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // Passing an argument to next() automatically skips to the error handling middleware.
+    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404, 'ERR_APP_URL_NOT_FOUND')); // Passing an argument to next() automatically skips to the error handling middleware.
 });
 
 

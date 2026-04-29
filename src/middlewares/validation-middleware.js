@@ -30,16 +30,27 @@ exports.validateSchema = function (schema) {
 
         } catch (err) {
 
-            // We format Zod's errors to make them readable. Zod returns an 'issues' array. We convert them to a single string.
-            const errorMessages = err.issues.map(issue => {
-                const field = issue.path.length > 0 ? issue.path.slice(-1)[0] : 'general';
-                return `${field}: ${issue.message}`;
-            }).join('. ');
+            // "First error wins" approach. We extract only the first validation issue.
+            const firstIssue = err.issues[0];
+            const rawMessage = firstIssue.message;
+            
+            let errorCode = 'ERR_APP_INVALID_INPUT_DATA'; // Fallback code.
+            let cleanMessage = rawMessage;
 
-            const message = `Invalid input data. ${errorMessages}`;
+            // Check if our custom message contains the "|" separator.
+            if (rawMessage.includes('|')) {
+                const parts = rawMessage.split('|');
+                errorCode = parts[0];
+                cleanMessage = parts[1];
+
+            // For native Zod errors (e.g. strict mode "Unrecognized key").
+            } else {
+                const field = firstIssue.path.length > 0 ? firstIssue.path.slice(-1)[0] : 'general';
+                cleanMessage = `Invalid input data. ${field}: ${cleanMessage}`;
+            }
 
             // We pass the error to the global handler. We use 400 Bad Request.
-            return next(new AppError(message, 400));
+            return next(new AppError(cleanMessage, 400, errorCode));
 
         }
 

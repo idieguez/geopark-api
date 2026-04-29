@@ -31,7 +31,7 @@ exports.register = catchAsync(async (req, res, next) => {
     // Check if the email already exists.
     const existingUser = await User.findOne({ email: emailParam }).exec();
     if (existingUser) {
-        return next(new AppError(`The email address is already registered.`, 409));
+        return next(new AppError('The email address is already registered.', 409, 'ERR_AUTH_EMAIL_ALREADY_REGISTERED'));
     }
 
     // Hash the password before saving it.
@@ -90,12 +90,12 @@ exports.login = catchAsync(async (req, res, next) => {
         .select('+password') // Also give me the password, even if it is private.
         .exec();
     if (!existingUser) {
-        return next(new AppError(`Invalid credentials.`, 401));
+        return next(new AppError('Invalid credentials.', 401, 'ERR_AUTH_INVALID_CREDENTIALS'));
     }
 
     // Check if the account is currently locked.
     if (existingUser.lockUntil && existingUser.lockUntil > new Date()) {
-        return next(new AppError(`Account locked due to too many failed login attempts. Please try again later.`, 403));
+        return next(new AppError('Account locked due to too many failed login attempts. Please try again later.', 403, 'ERR_AUTH_ACCOUNT_LOCKED'));
     }
 
     // Compare the passwords.
@@ -110,7 +110,7 @@ exports.login = catchAsync(async (req, res, next) => {
         }
 
         await existingUser.save();
-        return next(new AppError(`Invalid credentials.`, 401));
+        return next(new AppError('Invalid credentials.', 401, 'ERR_AUTH_INVALID_CREDENTIALS'));
     }
 
     // If the password is correct: reset the lock counters.

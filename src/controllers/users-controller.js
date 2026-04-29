@@ -24,7 +24,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
     // Get user.
     const user = await User.findOne({ _id: userIdParam }).exec();
     if (!user) {
-        return next(new AppError(`User not found.`, 404));
+        return next(new AppError('User not found.', 404, 'ERR_USERS_NOT_FOUND'));
     }
 
     // Return user.
@@ -63,15 +63,15 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
     // Exclude _id, email and dates from updates.
     if (userParam._id) {
-        return next(new AppError(`It is not allowed to update the user id.`, 400));
+        return next(new AppError('It is not allowed to update the user id.', 400, 'ERR_USERS_FORBIDDEN_UPDATE_ID'));
     }
 
     if (userParam.email) {
-        return next(new AppError(`It is not allowed to update the user's email address.`, 400));
+        return next(new AppError('It is not allowed to update the user\'s email address.', 400, 'ERR_USERS_FORBIDDEN_UPDATE_EMAIL'));
     }
 
     if (userParam.dateUserCreation || userParam.dateLastUserModification || userParam.dateLastPasswordModification) {
-        return next(new AppError(`It is not allowed to update the dates.`, 400));
+        return next(new AppError('It is not allowed to update the dates.', 400, 'ERR_USERS_FORBIDDEN_UPDATE_DATES'));
     }
 
     // Dates update.
@@ -80,7 +80,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     // Get user.
     const user1 = await User.findOne({ _id: userIdParam }).exec();
     if (!user1) {
-        return next(new AppError(`User not found.`, 404));
+        return next(new AppError('User not found.', 404, 'ERR_USERS_NOT_FOUND'));
     }
 
     // Update user in the database.
@@ -90,7 +90,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     });
 
     if (!user2) {
-        return next(new AppError(`Error when updating the user.`, 500));
+        return next(new AppError('Error when updating the user.', 500, 'ERR_USERS_UPDATE_FAILED'));
     }
 
     // Return user.
@@ -133,13 +133,13 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     // Get user. We explicitly select the password because it has select: false in the model.
     const user = await User.findOne({ _id: userIdParam }).select('+password').exec();
     if (!user) {
-        return next(new AppError(`User not found.`, 404));
+        return next(new AppError('User not found.', 404, 'ERR_USERS_NOT_FOUND'));
     }
 
     // Check if current password is correct.
     const isMatch = await bcrypt.compare(passwordCurrentParam, user.password);
     if (!isMatch) {
-        return next(new AppError(`The current password is incorrect.`, 401));
+        return next(new AppError('The current password is incorrect.', 401, 'ERR_USERS_WRONG_PASSWORD'));
     }
 
     // Hash the new password.
@@ -156,7 +156,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     });
 
     if (!updatedUser) {
-        return next(new AppError(`Error when updating the password.`, 500));
+        return next(new AppError('Error when updating the password.', 500, 'ERR_USERS_PASSWORD_UPDATE_FAILED'));
     }
 
     // Generate a new JWT token to keep the user logged in seamlessly.
@@ -193,13 +193,13 @@ exports.deleteAccount = catchAsync(async (req, res, next) => {
     // Get user. We explicitly select the password because it has select: false in the model.
     const user = await User.findOne({ _id: userIdParam }).select('+password').exec();
     if (!user) {
-        return next(new AppError(`User not found.`, 404));
+        return next(new AppError('User not found.', 404, 'ERR_USERS_NOT_FOUND'));
     }
 
     // Check if password is correct.
     const isMatch = await bcrypt.compare(passwordParam, user.password);
     if (!isMatch) {
-        return next(new AppError(`The password is incorrect.`, 401));
+        return next(new AppError('The password is incorrect.', 401, 'ERR_USERS_WRONG_PASSWORD'));
     }
 
     // Delete all vehicles associated with the user.
@@ -208,7 +208,7 @@ exports.deleteAccount = catchAsync(async (req, res, next) => {
     // Delete user from the database.
     const result = await User.deleteOne({ _id: userIdParam }).exec();
     if (result.deletedCount === 0) {
-        return next(new AppError(`Error when deleting the user.`, 500));
+        return next(new AppError('Error when deleting the user.', 500, 'ERR_USERS_DELETE_FAILED'));
     }
     
     // Respond.
