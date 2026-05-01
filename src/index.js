@@ -4,7 +4,7 @@ require('./utils/logger');
 const { connectToDatabase, disconnectFromDatabase } = require('./database');
 const { app } = require('./app');
 
-const { APP_PORT } = process.env;
+const { APP_PORT: APP_PORT_ENV } = process.env;
 
 
 
@@ -16,10 +16,10 @@ connectToDatabase();
 
 
 // Start app.
+const APP_PORT = process.env.PORT || APP_PORT_ENV || 3000; // Ready for deployment in PaaS services.
+
 const server = app.listen(APP_PORT, function () {
-
     console.log({ message: `Server is running on port ${APP_PORT}.` });
-
 });
 
 

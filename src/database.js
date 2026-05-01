@@ -1,12 +1,27 @@
 const mongoose = require('mongoose');
 
-const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE, MONGODB_AUTH_SOURCE } = process.env;
+const { MONGODB_URI, MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE, MONGODB_AUTH_SOURCE } = process.env;
 
-// URI recommended for development environments (local instance, for example).
-const uri = `mongodb://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=${MONGODB_AUTH_SOURCE}`;
 
-// URI recommended for production environments (MongoDB Atlas, for example).
-// const uri = `mongodb+srv://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@${MONGODB_HOST}/${MONGODB_DATABASE}?retryWrites=true&w=majority`;
+
+
+/*
+ * Generates the connection URI based on the available environment variables. Prioritizes MONGODB_URI for cloud environments.
+ */
+
+const getMongoUri = () => {
+
+    // If a full URI is provided (standard in PaaS), use it directly.
+    if (MONGODB_URI) {
+        return MONGODB_URI;
+    }
+
+    // Default to the standard connection string for local development.
+    return `mongodb://${MONGODB_USER}:${encodeURIComponent(MONGODB_PASSWORD)}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=${MONGODB_AUTH_SOURCE}`;
+
+};
+
+const uri = getMongoUri();
 
 
 

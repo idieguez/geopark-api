@@ -12,6 +12,9 @@
     "test:watch": "jest --watch",
     "test:full": "npm run test:unit && npm run test:integration"
   },
+  "engines": {
+    "node": "22.20.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/idieguez/geopark-api.git"
