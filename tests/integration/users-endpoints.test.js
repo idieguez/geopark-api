@@ -23,7 +23,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
     // Helper function to create a user and get a valid token.
     const createAndLoginUser = async () => {
 
-        // 1. Create user.
+        // Create user.
         const hashedPassword = await bcrypt.hash('Password123!', 10);
         const pastDate = new Date(Date.now() - 60000); // 1 minute ago.
 
@@ -36,7 +36,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             dateLastPasswordModification: pastDate
         });
 
-        // 2. Login to get token.
+        // Login to get token.
         const loginResponse = await request(app)
             .post('/api/auth/login')
             .send({
@@ -53,12 +53,12 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser();
 
-        // 1. Request profile.
+        // Request profile.
         const response = await request(app)
             .get('/api/users/')
             .set('Authorization', `Bearer ${token}`); // Auth header.
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data.email).toBe('alejandro@example.com');
         expect(response.body.data.name).toBe('Alejandro');
@@ -72,7 +72,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser();
 
-        // 1. Request update.
+        // Request update.
         const response = await request(app)
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
@@ -81,12 +81,12 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 surname: 'Martínez Editado'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data.name).toBe('Alejandro Editado');
         expect(response.body.data.surname).toBe('Martínez Editado');
 
-        // 3. Verify DB persistence.
+        // Verify DB persistence.
         const userInDb = await User.findOne({ email: 'alejandro@example.com' });
         expect(userInDb.name).toBe('Alejandro Editado');
 
@@ -98,7 +98,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser();
 
-        // 1. Request update with forbidden field.
+        // Request update with forbidden field.
         const response = await request(app)
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
@@ -106,7 +106,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 email: 'david@example.com' // Forbidden.
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(400);
         expect(response.body.message).toContain('Unrecognized key');
         expect(response.body.message).toContain('email');
@@ -130,7 +130,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
             notes: 'For the whole family.'
         });
 
-        // 1. Request delete account.
+        // Request delete account.
         const response = await request(app)
             .post('/api/users/delete-account/')
             .set('Authorization', `Bearer ${token}`)
@@ -138,14 +138,14 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 password: 'Password123!'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(204);
 
-        // 3. Verify DB (User must be deleted).
+        // Verify DB (User must be deleted).
         const userInDb = await User.findOne({ email: 'alejandro@example.com' });
         expect(userInDb).toBeNull();
 
-        // 4. Verify DB (Vehicles must be deleted).
+        // Verify DB (Vehicles must be deleted).
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
         expect(vehicleInDb).toBeNull();
 
@@ -157,7 +157,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser();
 
-        // 1. Request delete account with wrong password.
+        // Request delete account with wrong password.
         const response = await request(app)
             .post('/api/users/delete-account/')
             .set('Authorization', `Bearer ${token}`)
@@ -165,11 +165,11 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 password: 'WrongPassword123!' // <--
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(401);
         expect(response.body.message).toContain('incorrect');
 
-        // 3. Verify DB (User must NOT be deleted).
+        // Verify DB (User must NOT be deleted).
         const userInDb = await User.findOne({ email: 'alejandro@example.com' });
         expect(userInDb).not.toBeNull();
 
@@ -192,7 +192,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser(); // Password is 'Password123!'
 
-        // 1. Request password update.
+        // Request password update.
         const response = await request(app)
             .patch('/api/users/update-password')
             .set('Authorization', `Bearer ${token}`)
@@ -201,11 +201,11 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 passwordNew: 'NewSecurePass_456!'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data).toHaveProperty('token'); // Must return the new JWT inside data.
 
-        // 3. Verify DB (checking if hash changed).
+        // Verify DB (checking if hash changed).
         const userInDb = await User.findOne({ email: 'alejandro@example.com' }).select('+password');
         const isMatch = await bcrypt.compare('NewSecurePass_456!', userInDb.password);
         expect(isMatch).toBe(true); // The new password must be working.
@@ -218,7 +218,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser();
 
-        // 1. Request password update with WRONG current password.
+        // Request password update with WRONG current password.
         const response = await request(app)
             .patch('/api/users/update-password')
             .set('Authorization', `Bearer ${token}`)
@@ -227,7 +227,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 passwordNew: 'NewSecurePass_456!'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(401);
         expect(response.body.message).toContain('incorrect');
 
@@ -239,7 +239,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
 
         const token = await createAndLoginUser();
 
-        // 1. Attempt to exploit the old route.
+        // Attempt to exploit the old route.
         const response = await request(app)
             .patch('/api/users/')
             .set('Authorization', `Bearer ${token}`)
@@ -247,7 +247,7 @@ describe('Integration test suite for User endpoints (/api/users).', () => {
                 password: 'HackerPassword123!' // <-- Trying to inject password
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(400);
         expect(response.body.message).toContain('Unrecognized key');
         expect(response.body.message).toContain('password');

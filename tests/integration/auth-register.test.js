@@ -30,17 +30,17 @@ describe('Integration test suite for POST /api/auth/register.', () => {
             newsletter: true
         };
 
-        // 1. Send HTTP request.
+        // Send HTTP request.
         const response = await request(app)
             .post('/api/auth/register')
             .send(userData);
 
-        // 2. Verify HTTP response.
+        // Verify HTTP response.
         expect(response.status).toBe(201);
         expect(response.body.data.email).toBe('alejandro@example.com');
         expect(response.body.data).not.toHaveProperty('password'); // Security check: do not return password.
 
-        // 3. Verify Database.
+        // Verify Database.
         const userInDb = await User.findOne({ email: 'alejandro@example.com' }).select('+password');
         expect(userInDb).toBeTruthy(); // It must exist.
         expect(userInDb.name).toBe('Alejandro');

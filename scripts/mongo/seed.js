@@ -25,7 +25,7 @@ const seedDatabase = async () => {
 
     try {
 
-        // 1. Connect to the database.
+        // Connect to the database.
         console.log('Connecting to database.');
 
         const {
@@ -42,21 +42,21 @@ const seedDatabase = async () => {
         console.log('Connected to MongoDB successfully.');
 
 
-        // 2. Wipe existing data.
+        // Wipe existing data.
         console.log('Wiping existing data.');
         await User.deleteMany({});
         await Vehicle.deleteMany({});
         console.log('Old data cleared.');
 
 
-        // 3. Prepare passwords.
+        // Prepare passwords.
         const saltRounds = 12;
         const hashedAlejandro = await bcrypt.hash('alejandro.martinez.1', saltRounds);
         const hashedDavid = await bcrypt.hash('david.lopez.1', saltRounds);
         const hashedElena = await bcrypt.hash('elena.gomez.1', saltRounds);
 
 
-        // 4. Create Users.
+        // Create Users.
         console.log('Creating users.');
         const userAlejandro = await User.create({
             name: 'Alejandro',
@@ -109,7 +109,7 @@ const seedDatabase = async () => {
         console.log('Users created successfully.');
 
 
-        // 5. Create Vehicles.
+        // Create Vehicles.
         console.log('Creating vehicles.');
         
         // Alejandro's vehicles.
@@ -197,7 +197,7 @@ const seedDatabase = async () => {
         console.log('Vehicles created successfully.');
 
 
-        // 6. Close connection.
+        // Close connection.
         console.log('Closing database connection.');
         await mongoose.connection.close();
         console.log('Seed completed successfully!');

@@ -32,7 +32,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
             newsletter: true
         });
 
-        // 1. Send login request.
+        // Send login request.
         const response = await request(app)
             .post('/api/auth/login')
             .send({
@@ -40,7 +40,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
                 password: 'Password123!'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data).toHaveProperty('token');
         expect(response.body.data.email).toBe('alejandro@example.com');
@@ -66,7 +66,7 @@ describe('Integration test suite for POST /api/auth/login.', () => {
             newsletter: true
         });
 
-        // 1. Send login request with WRONG password.
+        // Send login request with WRONG password.
         const response = await request(app)
             .post('/api/auth/login')
             .send({

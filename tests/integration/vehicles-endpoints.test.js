@@ -51,7 +51,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
 
         const token = await createAndLoginUser();
 
-        // 1. Request create vehicle.
+        // Request create vehicle.
         const response = await request(app)
             .post('/api/vehicles/')
             .set('Authorization', `Bearer ${token}`)
@@ -63,12 +63,12 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
                 notes: 'For the whole family.'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(201);
         expect(response.body.data.licensePlate).toBe('1234ABC');
         expect(response.body.data.brand).toBe('Mercedes-Benz');
 
-        // 3. Verify DB persistence.
+        // Verify DB persistence.
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
         expect(vehicleInDb).toBeTruthy();
         expect(vehicleInDb.userId).toBeTruthy();
@@ -82,18 +82,18 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const token = await createAndLoginUser();
         const user = await User.findOne({ email: 'alejandro@example.com' });
 
-        // Pre-step: Create two vehicles directly in DB.
+        // Pre-step: create two vehicles directly in DB.
         await Vehicle.create([
             { userId: user._id, licensePlate: '1111AAA', type: 'car', brand: 'Opel', model: 'Insignia' },
             { userId: user._id, licensePlate: '2222BBB', type: 'car', brand: 'Volkswagen', model: 'Polo' }
         ]);
 
-        // 1. Request list.
+        // Request list.
         const response = await request(app)
             .get('/api/vehicles/')
             .set('Authorization', `Bearer ${token}`);
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(Array.isArray(response.body.data)).toBe(true);
         expect(response.body.data.length).toBe(2);
@@ -107,7 +107,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const token = await createAndLoginUser();
         const user = await User.findOne({ email: 'alejandro@example.com' });
 
-        // Pre-step: Create vehicle.
+        // Pre-step: create vehicle.
         await Vehicle.create({
             userId: user._id,
             licensePlate: '1234ABC',
@@ -117,12 +117,12 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             notes: 'For the whole family.'
         });
 
-        // 1. Request vehicle details.
+        // Request vehicle details.
         const response = await request(app)
             .get('/api/vehicles/1234ABC')
             .set('Authorization', `Bearer ${token}`);
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data.licensePlate).toBe('1234ABC');
         expect(response.body.data.model).toBe('Vito');
@@ -136,7 +136,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const token = await createAndLoginUser();
         const user = await User.findOne({ email: 'alejandro@example.com' });
 
-        // Pre-step: Create vehicle.
+        // Pre-step: create vehicle.
         await Vehicle.create({
             userId: user._id,
             licensePlate: '1234ABC',
@@ -146,7 +146,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             notes: 'For the whole family (original notes).'
         });
 
-        // 1. Request update.
+        // Request update.
         const response = await request(app)
             .patch('/api/vehicles/1234ABC')
             .set('Authorization', `Bearer ${token}`)
@@ -154,11 +154,11 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
                 notes: 'For the whole family (updated notes).'
             });
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(200);
         expect(response.body.data.notes).toBe('For the whole family (updated notes).');
 
-        // 3. Verify DB.
+        // Verify DB.
         const updatedVehicle = await Vehicle.findOne({ licensePlate: '1234ABC' });
         expect(updatedVehicle.notes).toBe('For the whole family (updated notes).');
 
@@ -171,7 +171,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const token = await createAndLoginUser();
         const user = await User.findOne({ email: 'alejandro@example.com' });
 
-        // Pre-step: Create vehicle.
+        // Pre-step: create vehicle.
         await Vehicle.create({
             userId: user._id,
             licensePlate: '1234ABC',
@@ -180,15 +180,15 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             model: 'Vito'
         });
 
-        // 1. Request delete.
+        // Request delete.
         const response = await request(app)
             .delete('/api/vehicles/1234ABC')
             .set('Authorization', `Bearer ${token}`);
 
-        // 2. Verify response.
+        // Verify response.
         expect(response.status).toBe(204);
 
-        // 3. Verify DB.
+        // Verify DB.
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234ABC' });
         expect(vehicleInDb).toBeNull();
 
@@ -201,7 +201,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
         const token = await createAndLoginUser();
         const user = await User.findOne({ email: 'alejandro@example.com' });
 
-        // Pre-step: Create vehicle.
+        // Pre-step: create vehicle.
         await Vehicle.create({
             userId: user._id,
             licensePlate: '1234ABC',
@@ -210,7 +210,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             model: 'Vito'
         });
 
-        // 1. Attempt to create same license plate.
+        // Attempt to create same license plate.
         const response = await request(app)
             .post('/api/vehicles/')
             .set('Authorization', `Bearer ${token}`)
@@ -257,7 +257,7 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
             model: 'Car'
         });
 
-        // 1. Attempt to hijack owner or change license plate.
+        // Attempt to hijack owner or change license plate.
         const response = await request(app)
             .patch('/api/vehicles/1234FIX')
             .set('Authorization', `Bearer ${token}`)
@@ -266,10 +266,10 @@ describe('Integration test suite for Vehicle endpoints (/api/vehicles).', () => 
                 userId: '507f1f77bcf86cd799439011' // Forbidden (Random ID).
             });
 
-        // 2. Verify response (expect 400 due to Zod "Unrecognized key" or specific validation).
+        // Verify response (expect 400 due to Zod "Unrecognized key" or specific validation).
         expect(response.status).toBe(400);
 
-        // 3. Verify DB integrity (critical).
+        // Verify DB integrity (critical).
         const vehicleInDb = await Vehicle.findOne({ licensePlate: '1234FIX' });
         expect(vehicleInDb).toBeTruthy(); // License plate didn't change.
         expect(vehicleInDb.userId.toString()).toBe(user._id.toString()); // Owner didn't change.
