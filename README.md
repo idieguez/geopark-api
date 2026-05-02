@@ -88,7 +88,7 @@ Adicionalmente, se han empleado las siguientes dependencias principales:
 - jest (dev)
 - jsonwebtoken
 - mongodb-memory-server (dev)
-- mongoose (dev)
+- mongoose
 - morgan
 - nodemon (dev)
 - supertest (dev)
