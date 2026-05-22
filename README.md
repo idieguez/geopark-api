@@ -4,7 +4,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853D?style=flat-square&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-5.x-404D59?style=flat-square&logo=express)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Ready-4EA94B?style=flat-square&logo=mongodb&logoColor=white)
-![Jest Tests](https://img.shields.io/badge/Tests-60%20Passed-brightgreen?style=flat-square&logo=jest)
+![Jest Tests](https://img.shields.io/badge/Tests-70%20Passed-brightgreen?style=flat-square&logo=jest)
 ![License](https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square)
 
 
